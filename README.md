@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sehsuechte — Exhibition NFC App
+
+A Next.js web app that allows visitors to scan NFC tags at artworks throughout the exhibition, building a personal collection that is displayed at the end of their visit.
+
+---
+
+## How it works
+
+1. Visitor taps the **entrance NFC tag** → checks in with their name
+2. Visitor taps **artwork NFC tags** throughout the exhibition → each artwork is added to their collection
+3. Visitor taps the **exit NFC tag** → sees a summary of all artworks they scanned
+
+---
+
+## Tech Stack
+
+- **Next.js** — frontend framework
+- **Supabase** — database and API
+- **Vercel** — hosting
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
+### 1. Clone the repo
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/bungedrews/sehsuechte.git
+cd sehsuechte
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 3. Set up environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file in the root of the project:
 
-## Learn More
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
 
-To learn more about Next.js, take a look at the following resources:
+I added the correct credentials to our Notion, they are the same as the ones you made for the previous project
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Run locally
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The app will be running at `http://localhost:3000`
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Pages & Endpoints
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### `/checkin`
+**Triggered by:** Entrance NFC tag  
+**What it does:** Displays a name input form. On submission, creates a new session in Supabase and saves the session ID to localStorage.
+
+---
+
+### `/like?code=artwork-01`
+**Triggered by:** Artwork NFC tags  
+**What it does:** Reads the session ID from localStorage. Looks up the artwork by its `nfc_code` in Supabase, then saves a scan record linking the session to the artwork. Shows a confirmation message.  
+**Query parameter:** `code` — must match the `nfc_code` field in the `artworks` table in Supabase.
+
+---
+
+### `/summary`
+**Triggered by:** Exit NFC tag  
+**What it does:** Reads the session ID from localStorage, marks the session as ended, and fetches all scanned artworks for that session. Displays the visitor's personal collection.
+
+---
+
+## Database Schema
+
+### `sessions`
+| column | type | notes |
+|---|---|---|
+| id | uuid | primary key, auto-generated |
+| name | text | entered at check-in |
+| created_at | timestamp | set on check-in |
+| ended_at | timestamp | set on exit, nullable |
+
+### `artworks`
+| column | type | notes |
+|---|---|---|
+| id | uuid | primary key |
+| nfc_code | text | unique, matches URL parameter e.g. `artwork-01` |
+| title | text | |
+| artist | text | |
+| description | text | |
+| image_url | text | |
+
+### `scans`
+| column | type | notes |
+|---|---|---|
+| id | uuid | primary key |
+| session_id | uuid | references sessions.id |
+| artwork_id | uuid | references artworks.id |
+| scanned_at | timestamp | auto-generated |
+
+---
+
+## NFC Tags
+
+| Tag | URL |
+|---|---|
+| Entrance | `https://yourdomain.com/checkin` |
+| Artwork (each one) | `https://yourdomain.com/like?code=artwork-01` |
+| Exit | `https://yourdomain.com/summary` |
+
+NFC tags are written using the **NFC Tools** app on iPhone.
+
+---
+
+## Project Structure
+```
+├── app/
+│   ├── page.js          # Home / welcome screen
+│   ├── checkin/
+│   │   └── page.js      # Check-in page
+│   ├── like/
+│   │   └── page.js      # Artwork scan handler
+│   └── summary/
+│       └── page.js      # End of visit summary
+├── lib/
+│   └── supabase.js      # Supabase client
+├── .env.local           # Environment variables (not in repo)
+└── README.md
+```
