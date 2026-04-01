@@ -1,16 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
+import { supabase } from '../../lib/supabase'
 
 export default function Like() {
   const [status, setStatus] = useState('Saving...')
-  const searchParams = useSearchParams()
   const router = useRouter()
-  const code = searchParams.get('code')
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search)
+    const code = searchParams.get('code')
     const saveScan = async () => {
       const sessionId = localStorage.getItem('session_id')
 
@@ -45,7 +45,7 @@ export default function Like() {
     }
 
     if (code) saveScan()
-  }, [code])
+  }, [])
 
   return (
     <main>
