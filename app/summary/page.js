@@ -27,5 +27,13 @@ export default function Summary() {
     endSession()
   }, [])
 
-  return <p>Finishing your journey...</p>
+  return (
+    <main
+      className="min-h-screen flex flex-col items-center justify-center gap-3"
+      style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
+    >
+      <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
+      <p className="text-xs text-neutral-400 tracking-[0.2em] uppercase">Finishing your journey...</p>
+    </main>
+  )
 }

@@ -39,7 +39,6 @@ export default function Like() {
         return
       }
 
-      // Success — go back to ready with the code so it can update the UI
       router.push(`/checkin/ready?scanned=${code}`)
     }
 
@@ -47,5 +46,13 @@ export default function Like() {
     else router.push('/checkin/ready')
   }, [])
 
-  return <p>Saving...</p>
+  return (
+    <main
+      className="min-h-screen flex flex-col items-center justify-center gap-3"
+      style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
+    >
+      <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
+      <p className="text-xs text-neutral-400 tracking-[0.2em] uppercase">Saving...</p>
+    </main>
+  )
 }

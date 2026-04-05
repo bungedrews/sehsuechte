@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+  --font-serif: 'DM Serif Display', serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 20px;
+  background: #f5f2eb;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #1a1a1a;
+  color: #f5f2eb;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px #f5f2eb inset;
+  -webkit-text-fill-color: #1a1a1a;
+}
