@@ -9,7 +9,7 @@ export default function Home() {
     <main>
       <h1>Welcome to the Exhibition</h1>
       <button onClick={() => router.push('/checkin')}>
-        Check In
+        Begin
       </button>
     </main>
   )
