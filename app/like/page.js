@@ -1,16 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../../lib/supabase'
 
 export default function Like() {
-  const [status, setStatus] = useState('Saving...')
   const router = useRouter()
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search)
-    const code = searchParams.get('code')
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get('code')
+
     const saveScan = async () => {
       const sessionId = localStorage.getItem('session_id')
 
@@ -19,7 +19,6 @@ export default function Like() {
         return
       }
 
-      // Look up artwork by nfc_code
       const { data: artwork, error: artworkError } = await supabase
         .from('artworks')
         .select('id')
@@ -27,32 +26,26 @@ export default function Like() {
         .single()
 
       if (artworkError || !artwork) {
-        setStatus('Artwork not found.')
+        router.push('/checkin/ready?error=notfound')
         return
       }
 
-      // Save the scan
       const { error: scanError } = await supabase
         .from('scans')
         .insert({ session_id: sessionId, artwork_id: artwork.id })
 
       if (scanError) {
-        setStatus('Something went wrong.')
+        router.push('/checkin/ready?error=scanfailed')
         return
       }
 
-      setStatus('Added to your collection!')
+      // Success — go back to ready with the code so it can update the UI
+      router.push(`/checkin/ready?scanned=${code}`)
     }
 
     if (code) saveScan()
+    else router.push('/checkin/ready')
   }, [])
 
-  return (
-    <main>
-      <h1>{status}</h1>
-      <button onClick={() => router.push('/summary')}>
-        View my collection
-      </button>
-    </main>
-  )
+  return <p>Saving...</p>
 }
