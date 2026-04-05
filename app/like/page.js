@@ -1,3 +1,4 @@
+// app/like/page.js
 'use client'
 
 import { useEffect } from 'react'
@@ -15,7 +16,7 @@ export default function Like() {
       const sessionId = localStorage.getItem('session_id')
 
       if (!sessionId) {
-        router.push('/checkin')
+        router.replace('/checkin')
         return
       }
 
@@ -26,7 +27,7 @@ export default function Like() {
         .single()
 
       if (artworkError || !artwork) {
-        router.push('/checkin/ready?error=notfound')
+        router.replace('/checkin/ready?error=notfound')
         return
       }
 
@@ -35,15 +36,16 @@ export default function Like() {
         .insert({ session_id: sessionId, artwork_id: artwork.id })
 
       if (scanError) {
-        router.push('/checkin/ready?error=scanfailed')
+        router.replace('/checkin/ready?error=scanfailed')
         return
       }
 
-      router.push(`/checkin/ready?scanned=${code}`)
+      // Use replace so the /like page is not in browser history
+      router.replace(`/checkin/ready?code=${code}`)
     }
 
     if (code) saveScan()
-    else router.push('/checkin/ready')
+    else router.replace('/checkin/ready')
   }, [])
 
   return (
