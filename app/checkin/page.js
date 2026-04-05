@@ -26,7 +26,7 @@ export default function CheckIn() {
     }
 
     localStorage.setItem('session_id', data.id)
-    router.push('/')
+    router.push('/ready')
   }
 
   return (
