@@ -45,7 +45,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 I added the correct credentials to our Notion, they are the same as the ones you made for the previous project
 
 ### 4. Run locally
-```bash
+```basho
 npm run dev
 ```
 
@@ -131,3 +131,19 @@ NFC tags are written using the **NFC Tools** app on iPhone.
 ├── .env.local           # Environment variables (not in repo)
 └── README.md
 ```
+
+End points if you don't have nfc tags to test:
+http://localhost:3000/like?code=artwork-01 
+http://localhost:3000/like?code=artwork-02
+http://localhost:3000/like?code=artwork-03
+http://localhost:3000/like?code=artwork-04
+http://localhost:3000/like?code=artwork-05
+
+Page that gives you an updated list of artworks you liked as you tap through exhibition:
+http://localhost:3000/checkin/ready
+
+Personal journey summary:
+http://localhost:3000/summary
+
+Comparison to other visitors:
+http://localhost:3000/summary

@@ -34,8 +34,6 @@ export default function CheckIn() {
 
   return (
     <main className="min-h-screen flex flex-col justify-between p-8" style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}>
-
-      {/* Top bar */}
       <div className="flex justify-between items-center">
         <button
           onClick={() => router.push('/')}
@@ -46,7 +44,6 @@ export default function CheckIn() {
         <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Check In</span>
       </div>
 
-      {/* Form */}
       <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-3">
           <p className="text-xs tracking-[0.25em] text-neutral-400 uppercase">Your name</p>
@@ -89,11 +86,9 @@ export default function CheckIn() {
         </div>
       </div>
 
-      {/* Bottom */}
       <div className="text-xs text-neutral-300 tracking-widest">
         Sehsüchte / 2025
       </div>
-
     </main>
   )
 }
