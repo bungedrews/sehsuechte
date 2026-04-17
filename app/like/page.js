@@ -72,20 +72,20 @@ export default function Like() {
     success: {
       icon: '✦',
       title: 'Scan successful!',
-      sub: 'This artwork has been added to your collection.',
-      hint: 'Close this tab to continue your journey',
+      sub: 'Close this tab to continue your journey.',
+      hint: 'This artwork has been added to your collection',
     },
     already: {
       icon: '○',
       title: 'Already saved',
-      sub: 'This artwork is already in your collection.',
-      hint: 'Close this tab to continue your journey',
+      sub: 'Close this tab to continue your journey.',
+      hint: 'This artwork is already in your collection',
     },
     error: {
       icon: '×',
-      title: 'Something went wrong',
-      sub: 'This artwork could not be found.',
-      hint: 'Close this tab and try again',
+      title: 'Something went wrong :(',
+      sub: 'Close this tab and try again.',
+      hint: 'This artwork could not be found',
     },
     'no-session': {
       icon: '×',
@@ -130,7 +130,7 @@ export default function Like() {
             onClick={() => router.push('/checkin')}
             className="w-fit flex items-center gap-3 group"
           >
-            <span className="text-xs tracking-[0.2em] text-neutral-900 uppercase group-hover:text-neutral-500 transition-colors">
+            <span className="text-s tracking-[0.2em] text-neutral-900 uppercase group-hover:text-neutral-500 transition-colors">
               Go to check in
             </span>
             <span className="text-neutral-400 group-hover:translate-x-1 transition-transform">→</span>
@@ -140,9 +140,10 @@ export default function Like() {
 
       {/* Bottom hint */}
       {screen.hint && (
-        <p className="text-xs text-neutral-300 tracking-wide">
-          {screen.hint}
-        </p>
+        <div className="flex flex-col gap-1 border-t border-neutral-300 pt-6">
+          <p className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Next step</p>
+          <p className="text-base text-neutral-900 tracking-wide">{screen.hint}</p>
+        </div>
       )}
     </main>
   )

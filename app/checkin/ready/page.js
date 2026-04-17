@@ -500,20 +500,20 @@ function ReadyContent() {
       </div>
 
         <div className="flex flex-col gap-2">
-          <h2 className="text-4xl text-neutral-900 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
+          <h2 className="text-7xl text-neutral-900 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
             Your Journey
           </h2>
-          <p className="text-sm text-neutral-500 leading-relaxed max-w-[260px]">
+          <p className="text-m text-neutral-900 leading-relaxed max-w-[460px]">
             {scannedArtworks.length === 0
               ? 'Tap your phone on an artwork to begin.'
-              : 'Keep exploring. Tap artworks to add them.'}
+              : '. Tap artworks to add them.'}
           </p>
         </div>
 
         {nfcBadge()}
 
         {!nfcSupported && (
-          <p className="text-xs text-neutral-300 leading-relaxed">
+          <p className="text-s text-neutral-400 leading-relaxed">
             Tap an artwork tag → see confirmation → close that tab to return here
           </p>
         )}
@@ -536,7 +536,7 @@ function ReadyContent() {
         <JourneyViz scans={scans} />
 
         <div className="flex justify-between items-end mt-auto">
-          <p className="text-xs text-neutral-300 leading-relaxed">Tap exit tag<br />to finish</p>
+          <p className="text-xs text-neutral-400 leading-relaxed">Tap exit tag<br />to finish</p>
           <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
         </div>
     </main>

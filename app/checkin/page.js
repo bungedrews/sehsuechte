@@ -48,7 +48,8 @@ export default function CheckIn() {
         <div className="flex flex-col gap-3">
           <p className="text-xs tracking-[0.25em] text-neutral-400 uppercase">Your name</p>
           <h2
-            className="text-4xl text-neutral-900 leading-tight"
+            className="text-4
+            xl text-neutral-900 leading-tight"
             style={{ fontFamily: 'var(--font-serif)' }}
           >
             Who's exploring<br />today?
@@ -87,7 +88,7 @@ export default function CheckIn() {
       </div>
 
       <div className="text-xs text-neutral-300 tracking-widest">
-        Sehsüchte / 2025
+        Sehsüchte / 2026
       </div>
     </main>
   )

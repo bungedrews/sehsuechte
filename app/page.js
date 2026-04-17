@@ -6,23 +6,26 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <main className="min-h-screen flex flex-col justify-between p-8" style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}>
+    <main
+      className="h-screen flex flex-col pt-[10px] pb-[10px] px-8 overflow-hidden"
+      style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
+    >
 
       {/* Top bar */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center shrink-0">
         <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Sehsüchte</span>
         <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">2026</span>
       </div>
 
       {/* Center content */}
-      <div className="flex flex-col gap-8">
+      <div className="flex-1 flex flex-col justify-center gap-6 min-h-0">
         <div className="flex flex-col gap-3">
           <p className="text-xs tracking-[0.25em] text-neutral-400 uppercase">Exhibition</p>
           <h1
-            className="text-6xl leading-[1.05] text-neutral-900"
+            className="text-5xl md:text-6xl leading-[1.05] text-neutral-900"
             style={{ fontFamily: 'var(--font-serif)' }}
           >
-            Point of<br />Interest
+            Welcome<br />curious explorer!
           </h1>
         </div>
 
@@ -37,12 +40,14 @@ export default function Home() {
           <span className="text-xs tracking-[0.2em] text-neutral-900 uppercase group-hover:text-neutral-500 transition-colors duration-300">
             Begin Journey
           </span>
-          <span className="text-neutral-400 group-hover:translate-x-1 transition-transform duration-300">→</span>
+          <span className="text-neutral-400 group-hover:translate-x-1 transition-transform duration-300">
+            →
+          </span>
         </button>
       </div>
 
       {/* Bottom */}
-      <div className="flex justify-between items-end">
+      <div className="flex justify-between items-end shrink-0">
         <span className="text-xs text-neutral-300 tracking-widest">POI</span>
         <div className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
       </div>
