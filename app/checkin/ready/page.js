@@ -119,28 +119,42 @@ function JourneyViz({ scans }) {
   const svgRef = useRef(null)
   const [selectedArtwork, setSelectedArtwork] = useState(null)
 
-  if (!scans || scans.length < 2) return null
+  const safeScans = scans || []
+  const seed = safeScans.length * 13
 
-  const times = scans.map(s => new Date(s.scanned_at).getTime())
-  const deltas = times.slice(1).map((t, i) => (t - times[i]) / 60000)
-  const maxDelta = Math.max(...deltas, 1)
-  const segLens = deltas.map(d => MIN_SEG + (d / maxDelta) * (MAX_SEG - MIN_SEG))
-
-  const seed = scans.length * 13
+  // Build points: pts[0] = entrance, pts[1..n] = artwork positions
   const pts = [{ x: W / 2 + (pseudoRand(seed, 0) - 0.5) * 60, y: 50 }]
-  for (let i = 0; i < segLens.length; i++) {
-    const prev = pts[i]
-    const angle = 88 + (pseudoRand(seed, i + 1) - 0.5) * 80
+  let deltas = []
+
+  if (safeScans.length >= 2) {
+    const times = safeScans.map(s => new Date(s.scanned_at).getTime())
+    deltas = times.slice(1).map((t, i) => (t - times[i]) / 60000)
+    const maxDelta = Math.max(...deltas, 1)
+    for (let i = 0; i < deltas.length; i++) {
+      const prev = pts[i]
+      const segLen = MIN_SEG + (deltas[i] / maxDelta) * (MAX_SEG - MIN_SEG)
+      const angle = 88 + (pseudoRand(seed, i + 1) - 0.5) * 80
+      const rad = (angle * Math.PI) / 180
+      pts.push({
+        x: Math.max(60, Math.min(W - 60, prev.x + segLen * Math.cos(rad))),
+        y: prev.y + segLen * Math.sin(rad),
+      })
+    }
+  } else if (safeScans.length === 1) {
+    // Place first artwork at a fixed distance below entrance
+    const angle = 90 + (pseudoRand(seed, 1) - 0.5) * 30
     const rad = (angle * Math.PI) / 180
-    const nx = Math.max(60, Math.min(W - 60, prev.x + segLens[i] * Math.cos(rad)))
-    const ny = prev.y + segLens[i] * Math.sin(rad)
-    pts.push({ x: nx, y: ny })
+    pts.push({
+      x: Math.max(60, Math.min(W - 60, pts[0].x + 70 * Math.cos(rad))),
+      y: pts[0].y + 70 * Math.sin(rad),
+    })
+    deltas = [0]
   }
 
   const totalH = Math.max(...pts.map(p => p.y)) + 80
   const viewBox = `0 0 ${W} ${totalH}`
 
-  const filterDefs = scans.map((_, i) => `
+  const filterDefs = safeScans.map((_, i) => `
     <filter id="wc${i}" x="-60%" y="-60%" width="220%" height="220%">
       <feTurbulence type="fractalNoise" baseFrequency="0.0${3 + (i % 4)}" numOctaves="4" seed="${i * 3 + 7}"/>
       <feDisplacementMap in="SourceGraphic" in2="noise" scale="${6 + (i % 5)}" xChannelSelector="R" yChannelSelector="G"/>
@@ -151,37 +165,40 @@ function JourneyViz({ scans }) {
     </filter>
   `).join('')
 
+  // Path segments only drawn once there are 2+ artworks
   const pathEls = []
-  for (let i = 0; i < pts.length - 1; i++) {
-    const a = pts[i], b = pts[i + 1]
-    const cpx = (a.x + b.x) / 2 + (pseudoRand(seed, i + 50) - 0.5) * 24
-    const cpy = (a.y + b.y) / 2 + (pseudoRand(seed, i + 60) - 0.5) * 14
-    const mins = deltas[i]
-    const numDots = Math.max(0, Math.floor(mins / MINS_PER_DOT) - 1)
+  if (safeScans.length >= 2) {
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = pts[i], b = pts[i + 1]
+      const cpx = (a.x + b.x) / 2 + (pseudoRand(seed, i + 50) - 0.5) * 24
+      const cpy = (a.y + b.y) / 2 + (pseudoRand(seed, i + 60) - 0.5) * 14
+      const mins = deltas[i] || 0
+      const numDots = Math.max(0, Math.floor(mins / MINS_PER_DOT) - 1)
 
-    const dots = []
-    for (let d = 1; d <= numDots; d++) {
-      const t = d / (numDots + 1)
-      const bp = qbez(a.x, a.y, cpx, cpy, b.x, b.y, t)
-      dots.push(
-        <circle key={d} cx={bp.x.toFixed(2)} cy={bp.y.toFixed(2)} r="2" fill="#1c1a15" opacity="0.45" />
+      const dots = []
+      for (let d = 1; d <= numDots; d++) {
+        const t = d / (numDots + 1)
+        const bp = qbez(a.x, a.y, cpx, cpy, b.x, b.y, t)
+        dots.push(
+          <circle key={d} cx={bp.x.toFixed(2)} cy={bp.y.toFixed(2)} r="2" fill="#1c1a15" opacity="0.45" />
+        )
+      }
+
+      pathEls.push(
+        <g key={i}>
+          <path d={`M${a.x},${a.y} Q${cpx},${cpy} ${b.x},${b.y}`}
+            fill="none" stroke="#1c1a15" strokeWidth="0.55" opacity="0.28" />
+          {dots}
+        </g>
       )
     }
-
-    pathEls.push(
-      <g key={i}>
-        <path d={`M${a.x},${a.y} Q${cpx},${cpy} ${b.x},${b.y}`}
-          fill="none" stroke="#1c1a15" strokeWidth="0.55" opacity="0.28" />
-        {dots}
-      </g>
-    )
   }
 
-  const bubbles = scans.map((scan, i) => {
+  const bubbles = safeScans.map((scan, i) => {
     const p = pts[i + 1]
     if (!p) return null
     const [c1, c2, c3] = PALETTES[i % PALETTES.length]
-    const dwell = i < deltas.length ? Math.min(deltas[i], 35) : 10
+    const dwell = i < deltas.length ? Math.min(Math.max(deltas[i], 0), 35) : 10
     const r = 11 + dwell * 0.85
     const labelLeft = p.x > W * 0.6
     const lx = labelLeft ? p.x - r - 8 : p.x + r + 8
@@ -212,35 +229,31 @@ function JourneyViz({ scans }) {
     )
   })
 
-  const totalMins = Math.round((times[times.length - 1] - times[0]) / 60000)
+  const allTimes = safeScans.length >= 2 ? safeScans.map(s => new Date(s.scanned_at).getTime()) : null
+  const totalMins = allTimes ? Math.round((allTimes[allTimes.length - 1] - allTimes[0]) / 60000) : null
 
   return (
     <>
-      <div className="flex flex-col gap-4 mt-8">
-        <p className="t-label">Your path</p>
-        <p className="t-body">
-          Tap a bubble to learn more. Bubble size reflects time between scans.
-          Small dots mark every {MINS_PER_DOT} minutes.
-        </p>
-        <svg ref={svgRef} viewBox={viewBox} width="100%"
-          xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
-          <defs dangerouslySetInnerHTML={{ __html: filterDefs }} />
-          <rect width={W} height={totalH} fill="var(--color-bg)" />
-          <circle cx={pts[0].x} cy={pts[0].y} r="3" fill="#1c1a15" opacity="0.3" />
-          <text x={pts[0].x} y={pts[0].y - 10} textAnchor="middle"
-            fontSize="8" fill="#1c1a15" opacity="0.35"
-            fontFamily="var(--font-mono)" letterSpacing="0.08em">
-            entrance
-          </text>
-          {pathEls}
-          {bubbles}
+      <svg ref={svgRef} viewBox={viewBox} width="100%"
+        xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+        <defs dangerouslySetInnerHTML={{ __html: filterDefs }} />
+        <rect width={W} height={totalH} fill="var(--color-bg)" />
+        <circle cx={pts[0].x} cy={pts[0].y} r="3" fill="#1c1a15" opacity="0.3" />
+        <text x={pts[0].x} y={pts[0].y - 10} textAnchor="middle"
+          fontSize="8" fill="#1c1a15" opacity="0.35"
+          fontFamily="var(--font-mono)" letterSpacing="0.08em">
+          entrance
+        </text>
+        {pathEls}
+        {bubbles}
+        {totalMins !== null && (
           <text x={W / 2} y={totalH - 16} textAnchor="middle"
             fontSize="8" fill="#1c1a15" opacity="0.22"
             fontFamily="var(--font-mono)" letterSpacing="0.1em">
-            {totalMins} min total · {scans.length} works
+            {totalMins} min total · {safeScans.length} works
           </text>
-        </svg>
-      </div>
+        )}
+      </svg>
 
       {selectedArtwork && (
         <ArtworkModal artwork={selectedArtwork} onClose={() => setSelectedArtwork(null)} />
