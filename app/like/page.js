@@ -8,7 +8,7 @@ import { supabase } from '../../lib/supabase'
 
 export default function Like() {
   const router = useRouter()
-  const [status, setStatus] = useState('saving') // saving | success | error | no-session
+  const [status, setStatus] = useState('saving')
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -33,7 +33,6 @@ export default function Like() {
         return
       }
 
-      // Check if already scanned
       const { data: existing } = await supabase
         .from('scans')
         .select('id')
@@ -63,66 +62,27 @@ export default function Like() {
   }, [])
 
   const screens = {
-    saving: {
-      icon: '◌',
-      title: 'Saving...',
-      sub: null,
-      hint: null,
-    },
-    success: {
-      icon: '✦',
-      title: 'Scan successful!',
-      sub: 'Close this tab to continue your journey.',
-      hint: 'This artwork has been added to your collection',
-    },
-    already: {
-      icon: '○',
-      title: 'Already saved',
-      sub: 'Close this tab to continue your journey.',
-      hint: 'This artwork is already in your collection',
-    },
-    error: {
-      icon: '×',
-      title: 'Something went wrong :(',
-      sub: 'Close this tab and try again.',
-      hint: 'This artwork could not be found',
-    },
-    'no-session': {
-      icon: '×',
-      title: 'No session found',
-      sub: 'Please check in first before scanning artworks.',
-      hint: null,
-    },
+    saving:       { icon: '◌', title: 'Saving...',               sub: null,                                         hint: null },
+    success:      { icon: '✦', title: 'Scan successful!',        sub: 'Close this tab to continue your journey.',   hint: 'This artwork has been added to your collection' },
+    already:      { icon: '○', title: 'Already saved',           sub: 'Close this tab to continue your journey.',   hint: 'This artwork is already in your collection' },
+    error:        { icon: '×', title: 'Something went wrong :(', sub: 'Close this tab and try again.',              hint: 'This artwork could not be found' },
+    'no-session': { icon: '×', title: 'No session found',        sub: 'Please check in first before scanning.',     hint: null },
   }
 
   const screen = screens[status]
 
   return (
-    <main
-      className="min-h-screen flex flex-col justify-between p-8"
-      style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
-    >
-      {/* Top bar */}
+    <main className="min-h-screen flex flex-col justify-between p-8">
       <div className="flex justify-between items-center">
-        <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Sehsüchte</span>
-        <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Artwork</span>
+        <span className="t-label">Sehsüchte</span>
+        <span className="t-label">Artwork</span>
       </div>
 
-      {/* Center content */}
       <div className="flex flex-col gap-6">
-        <span className="text-3xl text-neutral-300">{screen.icon}</span>
+        <span style={{ fontSize: '1.875rem', color: 'rgba(28,26,21,0.22)' }}>{screen.icon}</span>
         <div className="flex flex-col gap-2">
-          <h1
-            className="text-4xl text-neutral-900 leading-tight"
-            style={{ fontFamily: 'var(--font-serif)' }}
-          >
-            {screen.title}
-          </h1>
-          {screen.sub && (
-            <p className="text-sm text-neutral-500 leading-relaxed max-w-[260px]">
-              {screen.sub}
-            </p>
-          )}
+          <h1 className="t-heading">{screen.title}</h1>
+          {screen.sub && <p className="t-body max-w-[260px]">{screen.sub}</p>}
         </div>
 
         {status === 'no-session' && (
@@ -130,19 +90,16 @@ export default function Like() {
             onClick={() => router.push('/checkin')}
             className="w-fit flex items-center gap-3 group"
           >
-            <span className="text-s tracking-[0.2em] text-neutral-900 uppercase group-hover:text-neutral-500 transition-colors">
-              Go to check in
-            </span>
-            <span className="text-neutral-400 group-hover:translate-x-1 transition-transform">→</span>
+            <span className="t-label" style={{ color: 'var(--color-ink)' }}>Go to check in</span>
+            <span className="t-label group-hover:translate-x-1 transition-transform">→</span>
           </button>
         )}
       </div>
 
-      {/* Bottom hint */}
       {screen.hint && (
         <div className="flex flex-col gap-1 border-t border-neutral-300 pt-6">
-          <p className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Next step</p>
-          <p className="text-base text-neutral-900 tracking-wide">{screen.hint}</p>
+          <p className="t-label">Next step</p>
+          <p className="t-body" style={{ color: 'var(--color-ink)' }}>{screen.hint}</p>
         </div>
       )}
     </main>

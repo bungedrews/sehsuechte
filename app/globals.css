@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
+/* ── Design tokens ─────────────────────────────────────────────────────── */
+
 :root {
   --font-serif: 'DM Serif Display', serif;
-  --font-mono: 'DM Mono', monospace;
+  --font-mono:  'DM Mono', monospace;
+  --color-ink:  #1c1a15;
+  --color-bg:   #f5f2eb;
 }
+
+/* ── Reset ─────────────────────────────────────────────────────────────── */
 
 * {
   box-sizing: border-box;
@@ -14,17 +20,100 @@
 html, body {
   height: 100%;
   margin: 20px;
-  background: #f5f2eb;
-  color: #1a1a1a;
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+  color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
 }
 
+input, button, textarea, select {
+  font-family: inherit;
+}
+
 ::selection {
-  background: #1a1a1a;
-  color: #f5f2eb;
+  background: var(--color-ink);
+  color: var(--color-bg);
 }
 
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 100px #f5f2eb inset;
-  -webkit-text-fill-color: #1a1a1a;
+  -webkit-box-shadow: 0 0 0 100px var(--color-bg) inset;
+  -webkit-text-fill-color: var(--color-ink);
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────── */
+
+/* All small text: labels, buttons, tags, badges, indexes, metadata */
+.t-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(28, 26, 21, 0.45);
+}
+
+/* Serif page heading — used for all h1 / h2 across the site */
+.t-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(2.25rem, 6vw, 3rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--color-ink);
+}
+
+/* Large serif statement — only the "Your Journey" scanning screen
+.t-display {
+  font-family: var(--font-serif);
+  font-size: clamp(3.5rem, 12vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--color-ink);
+} */
+
+/* Body text — paragraphs, descriptions */
+.t-body {
+  font-size: 14px;
+  color: rgba(28, 26, 21, 0.55);
+  line-height: 1.65;
+}
+
+/* Form input */
+.t-input {
+  font-size: 18px;
+  color: var(--color-ink);
+}
+
+.t-input::placeholder {
+  color: rgba(28, 26, 21, 0.25);
+}
+
+/* Validation error */
+.t-error {
+  font-size: 12px;
+  color: #b91c1c;
+  letter-spacing: 0.05em;
+}
+
+/* Hover: labels inside a .group button brighten on hover */
+.group:hover .t-label {
+  color: var(--color-ink);
+}
+
+/* ── Navigation ─────────────────────────────────────────────────────────── */
+
+.nav-link {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 14px 24px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.nav-link-active {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+}
+
+.nav-link-inactive {
+  color: rgba(28, 26, 21, 0.35);
 }

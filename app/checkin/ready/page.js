@@ -65,10 +65,9 @@ function ArtworkModal({ artwork, onClose }) {
         style={{
           position: 'fixed', left: 0, right: 0, bottom: 0,
           zIndex: 50,
-          background: '#f5f2eb',
+          background: 'var(--color-bg)',
           borderRadius: '16px 16px 0 0',
           padding: '0 0 40px',
-          fontFamily: 'var(--font-mono)',
           animation: 'slideUp 0.28s cubic-bezier(0.32,0.72,0,1)',
           maxHeight: '90vh',
           overflowY: 'auto',
@@ -80,38 +79,25 @@ function ArtworkModal({ artwork, onClose }) {
 
         {artwork.image_url && (
           <div style={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
-            <img
-              src={artwork.image_url}
-              alt={artwork.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+            <img src={artwork.image_url} alt={artwork.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         )}
 
         <div style={{ padding: '24px 28px 0' }}>
-          <p style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(28,26,21,0.4)', marginBottom: 6 }}>
-            {artwork.artist}
-          </p>
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 400, color: '#1c1a15', marginBottom: 20, lineHeight: 1.2 }}>
-            {artwork.title}
-          </h2>
+          <p className="t-label" style={{ marginBottom: 6 }}>{artwork.artist}</p>
+          <h2 className="t-heading" style={{ fontSize: 26, marginBottom: 20 }}>{artwork.title}</h2>
           {artwork.description && (
-            <p style={{ fontSize: 13, color: 'rgba(28,26,21,0.65)', lineHeight: 1.7, marginBottom: 28 }}>
-              {artwork.description}
-            </p>
+            <p className="t-body" style={{ marginBottom: 28 }}>{artwork.description}</p>
           )}
           <button
             onClick={onClose}
+            className="t-label"
             style={{
               background: 'transparent',
               border: '0.5px solid rgba(28,26,21,0.25)',
               padding: '10px 20px',
-              fontSize: 11,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: 'rgba(28,26,21,0.5)',
               cursor: 'pointer',
-              fontFamily: 'var(--font-mono)',
             }}
           >
             Close
@@ -184,10 +170,8 @@ function JourneyViz({ scans }) {
 
     pathEls.push(
       <g key={i}>
-        <path
-          d={`M${a.x},${a.y} Q${cpx},${cpy} ${b.x},${b.y}`}
-          fill="none" stroke="#1c1a15" strokeWidth="0.55" opacity="0.28"
-        />
+        <path d={`M${a.x},${a.y} Q${cpx},${cpy} ${b.x},${b.y}`}
+          fill="none" stroke="#1c1a15" strokeWidth="0.55" opacity="0.28" />
         {dots}
       </g>
     )
@@ -204,16 +188,11 @@ function JourneyViz({ scans }) {
     const anchor = labelLeft ? 'end' : 'start'
 
     return (
-      <g
-        key={i}
-        onClick={() => setSelectedArtwork(scan.artwork)}
-        style={{ cursor: 'pointer' }}
-      >
+      <g key={i} onClick={() => setSelectedArtwork(scan.artwork)} style={{ cursor: 'pointer' }}>
         <circle cx={p.x} cy={p.y} r={r * 2.2} fill="transparent" />
         {[1.9, 1.55, 1.25].map((scale, li) => (
           <circle key={li} cx={p.x} cy={p.y} r={r * scale}
-            fill={c1} opacity={[0.04, 0.06, 0.10][li]}
-            filter={`url(#wc${i})`} />
+            fill={c1} opacity={[0.04, 0.06, 0.10][li]} filter={`url(#wc${i})`} />
         ))}
         <circle cx={p.x} cy={p.y} r={r * 0.88} fill={c1} opacity="0.18" filter={`url(#wc2${i})`} />
         <circle cx={p.x} cy={p.y} r={r * 0.58} fill={c2} opacity="0.35" />
@@ -238,20 +217,15 @@ function JourneyViz({ scans }) {
   return (
     <>
       <div className="flex flex-col gap-4 mt-8">
-        <p className="text-xs tracking-[0.25em] text-neutral-400 uppercase">Your path</p>
-        <p className="text-xs text-neutral-300 leading-relaxed">
+        <p className="t-label">Your path</p>
+        <p className="t-body">
           Tap a bubble to learn more. Bubble size reflects time between scans.
           Small dots mark every {MINS_PER_DOT} minutes.
         </p>
-        <svg
-          ref={svgRef}
-          viewBox={viewBox}
-          width="100%"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ display: 'block' }}
-        >
+        <svg ref={svgRef} viewBox={viewBox} width="100%"
+          xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
           <defs dangerouslySetInnerHTML={{ __html: filterDefs }} />
-          <rect width={W} height={totalH} fill="#f5f0e8" />
+          <rect width={W} height={totalH} fill="var(--color-bg)" />
           <circle cx={pts[0].x} cy={pts[0].y} r="3" fill="#1c1a15" opacity="0.3" />
           <text x={pts[0].x} y={pts[0].y - 10} textAnchor="middle"
             fontSize="8" fill="#1c1a15" opacity="0.35"
@@ -269,10 +243,7 @@ function JourneyViz({ scans }) {
       </div>
 
       {selectedArtwork && (
-        <ArtworkModal
-          artwork={selectedArtwork}
-          onClose={() => setSelectedArtwork(null)}
-        />
+        <ArtworkModal artwork={selectedArtwork} onClose={() => setSelectedArtwork(null)} />
       )}
     </>
   )
@@ -292,14 +263,8 @@ function ReadyContent() {
 
   useEffect(() => {
     const sessionId = localStorage.getItem('session_id')
-    if (!sessionId) {
-      router.push('/checkin')
-      return
-    }
-    if ('NDEFReader' in window) {
-      setNfcSupported(true)
-      startNfcScanning(sessionId)
-    }
+    if (!sessionId) { router.push('/checkin'); return }
+    if ('NDEFReader' in window) { setNfcSupported(true); startNfcScanning(sessionId) }
     loadScans(sessionId)
   }, [])
 
@@ -333,8 +298,7 @@ function ReadyContent() {
           if (record.recordType === 'url') {
             const decoder = new TextDecoder()
             const url = decoder.decode(record.data)
-            const urlParams = new URL(url)
-            const code = urlParams.searchParams.get('code')
+            const code = new URL(url).searchParams.get('code')
             if (code) await handleScan(code, sessionId)
           }
         }
@@ -417,7 +381,7 @@ function ReadyContent() {
     return (
       <div className="flex items-center gap-2 bg-neutral-100 rounded px-3 py-2 w-fit">
         <div className={`w-1.5 h-1.5 rounded-full ${state.dot} ${nfcStatus === 'scanning' ? 'animate-pulse' : ''}`} />
-        <span className="text-xs text-neutral-500 tracking-wide">{state.text}</span>
+        <span className="t-label">{state.text}</span>
       </div>
     )
   }
@@ -425,18 +389,12 @@ function ReadyContent() {
   // ── Finished view ─────────────────────────────────────────────────────────
   if (isFinished) {
     return (
-      <main
-        className="min-h-screen flex flex-col"
-        style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
-      >
+      <main className="min-h-screen flex flex-col">
         <Nav />
         <div className="flex flex-col p-8 gap-12">
           <div className="flex flex-col gap-3">
-            <p className="text-xs tracking-[0.25em] text-neutral-400 uppercase">Your collection</p>
-            <h1
-              className="text-5xl text-neutral-900 leading-tight"
-              style={{ fontFamily: 'var(--font-serif)' }}
-            >
+            <p className="t-label">Your collection</p>
+            <h1 className="t-heading">
               {scannedArtworks.length} work{scannedArtworks.length !== 1 ? 's' : ''}<br />explored
             </h1>
           </div>
@@ -444,12 +402,10 @@ function ReadyContent() {
           <div className="flex flex-col gap-0 border-t border-neutral-200">
             {scannedArtworks.map((artwork, i) => (
               <div key={i} className="flex items-start gap-4 py-5 border-b border-neutral-200">
-                <span className="text-xs text-neutral-300 w-6 pt-0.5 shrink-0">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
+                <span className="t-label w-6 pt-0.5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
                 <div className="flex flex-col gap-0.5">
-                  <p className="text-neutral-900 text-sm leading-snug">{artwork.title}</p>
-                  <p className="text-neutral-400 text-xs">{artwork.artist}</p>
+                  <p className="t-body" style={{ color: 'var(--color-ink)' }}>{artwork.title}</p>
+                  <p className="t-body">{artwork.artist}</p>
                 </div>
               </div>
             ))}
@@ -461,10 +417,8 @@ function ReadyContent() {
             onClick={() => { localStorage.removeItem('session_id'); router.push('/') }}
             className="w-fit flex items-center gap-3 group mt-auto"
           >
-            <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase group-hover:text-neutral-900 transition-colors duration-300">
-              Start over
-            </span>
-            <span className="text-neutral-300 group-hover:translate-x-1 transition-transform duration-300">→</span>
+            <span className="t-label">Start over</span>
+            <span className="t-label group-hover:translate-x-1 transition-transform duration-300">→</span>
           </button>
         </div>
       </main>
@@ -474,14 +428,11 @@ function ReadyContent() {
   // ── Loading ───────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <main
-        className="min-h-screen flex flex-col"
-        style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
-      >
+      <main className="min-h-screen flex flex-col">
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
-            <p className="text-xs text-neutral-400 tracking-[0.2em] uppercase">Loading...</p>
+            <p className="t-label">Loading...</p>
           </div>
         </div>
       </main>
@@ -490,55 +441,35 @@ function ReadyContent() {
 
   // ── Scanning view ─────────────────────────────────────────────────────────
   return (
-    <main
-      className="min-h-screen flex flex-col p-8 gap-8"
-      style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
-    >
+    <main className="min-h-screen flex flex-col p-8 gap-8">
       <div className="flex justify-between items-center">
-        <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Sehsüchte</span>
-        <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">{scannedArtworks.length} saved</span>
+        <span className="t-label">Sehsüchte</span>
+        <span className="t-label">{scannedArtworks.length} saved</span>
       </div>
 
-        <div className="flex flex-col gap-2">
-          <h2 className="text-7xl text-neutral-900 leading-tight" style={{ fontFamily: 'var(--font-serif)' }}>
-            Your Journey
-          </h2>
-          <p className="text-m text-neutral-900 leading-relaxed max-w-[460px]">
-            {scannedArtworks.length === 0
-              ? 'Tap your phone on an artwork to begin.'
-              : '. Tap artworks to add them.'}
-          </p>
-        </div>
+      <div className="flex flex-col gap-2">
+        <h2 className="t-heading">Your Journey</h2>
+        <p className="t-body">
+          {scannedArtworks.length === 0
+            ? 'Tap your phone on an artwork to begin.'
+            : 'Tap artworks to add them.'}
+        </p>
+      </div>
 
-        {nfcBadge()}
+      {nfcBadge()}
 
-        {!nfcSupported && (
-          <p className="text-s text-neutral-400 leading-relaxed">
-            Tap an artwork tag → see confirmation → close that tab to return here
-          </p>
-        )}
+      {!nfcSupported && (
+        <p className="t-body">
+          Tap an artwork tag → see confirmation → close that tab to return here
+        </p>
+      )}
 
-        {scannedArtworks.length > 0 && (
-          <div className="flex flex-col gap-0 border-t border-neutral-200">
-            {scannedArtworks.map((artwork, i) => (
-              <div key={i} className="flex items-center gap-4 py-4 border-b border-neutral-200">
-                <span className="text-xs text-neutral-300 w-6 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                <div className="flex flex-col gap-0.5">
-                  <p className="text-neutral-900 text-sm">{artwork.title}</p>
-                  <p className="text-neutral-400 text-xs">{artwork.artist}</p>
-                  <p className="text-neutral-400 text-xs">{artwork.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+      <JourneyViz scans={scans} />
 
-        <JourneyViz scans={scans} />
-
-        <div className="flex justify-between items-end mt-auto">
-          <p className="text-xs text-neutral-400 leading-relaxed">Tap exit tag<br />to finish</p>
-          <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
-        </div>
+      <div className="flex justify-between items-end mt-auto">
+        <p className="t-body">Tap exit tag<br />to finish</p>
+        <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
+      </div>
     </main>
   )
 }
@@ -546,10 +477,8 @@ function ReadyContent() {
 export default function Ready() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen flex items-center justify-center" style={{ background: '#f5f2eb' }}>
-        <p className="text-xs text-neutral-400 tracking-widest uppercase" style={{ fontFamily: 'var(--font-mono)' }}>
-          Loading...
-        </p>
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="t-label">Loading...</p>
       </main>
     }>
       <ReadyContent />

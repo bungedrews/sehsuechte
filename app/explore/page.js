@@ -70,10 +70,9 @@ function ArtworkModal({ artwork, onClose }) {
         style={{
           position: 'fixed', left: 0, right: 0, bottom: 0,
           zIndex: 50,
-          background: '#f5f2eb',
+          background: 'var(--color-bg)',
           borderRadius: '16px 16px 0 0',
           padding: '0 0 48px',
-          fontFamily: 'var(--font-mono)',
           animation: 'slideUp 0.28s cubic-bezier(0.32,0.72,0,1)',
           maxHeight: '90vh',
           overflowY: 'auto',
@@ -85,38 +84,25 @@ function ArtworkModal({ artwork, onClose }) {
 
         {artwork.image_url && (
           <div style={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
-            <img
-              src={artwork.image_url}
-              alt={artwork.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+            <img src={artwork.image_url} alt={artwork.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         )}
 
         <div style={{ padding: '24px 28px 0' }}>
-          <p style={{ fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(28,26,21,0.4)', marginBottom: 6 }}>
-            {artwork.artist}
-          </p>
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 400, color: '#1c1a15', marginBottom: 20, lineHeight: 1.2 }}>
-            {artwork.title}
-          </h2>
+          <p className="t-label" style={{ marginBottom: 6 }}>{artwork.artist}</p>
+          <h2 className="t-heading" style={{ fontSize: 26, marginBottom: 20 }}>{artwork.title}</h2>
           {artwork.description && (
-            <p style={{ fontSize: 13, color: 'rgba(28,26,21,0.65)', lineHeight: 1.7, marginBottom: 28 }}>
-              {artwork.description}
-            </p>
+            <p className="t-body" style={{ marginBottom: 28 }}>{artwork.description}</p>
           )}
           <button
             onClick={onClose}
+            className="t-label"
             style={{
               background: 'transparent',
               border: '0.5px solid rgba(28,26,21,0.25)',
               padding: '10px 20px',
-              fontSize: 11,
-              letterSpacing: '0.15em',
-              textTransform: 'uppercase',
-              color: 'rgba(28,26,21,0.5)',
               cursor: 'pointer',
-              fontFamily: 'var(--font-mono)',
             }}
           >
             Close
@@ -140,10 +126,8 @@ function JourneyViz({ scans }) {
 
   if (!scans || scans.length < 2) {
     return (
-      <div style={{ textAlign: 'center', padding: '60px 0', fontFamily: 'var(--font-mono)' }}>
-        <p style={{ fontSize: 11, letterSpacing: '0.15em', color: 'rgba(28,26,21,0.3)', textTransform: 'uppercase' }}>
-          Only one artwork scanned — no path to draw yet
-        </p>
+      <div style={{ textAlign: 'center', padding: '60px 0' }}>
+        <p className="t-label">Only one artwork scanned — no path to draw yet</p>
       </div>
     )
   }
@@ -198,10 +182,8 @@ function JourneyViz({ scans }) {
 
     pathEls.push(
       <g key={i}>
-        <path
-          d={`M${a.x},${a.y} Q${cpx},${cpy} ${b.x},${b.y}`}
-          fill="none" stroke="#1c1a15" strokeWidth="0.55" opacity="0.28"
-        />
+        <path d={`M${a.x},${a.y} Q${cpx},${cpy} ${b.x},${b.y}`}
+          fill="none" stroke="#1c1a15" strokeWidth="0.55" opacity="0.28" />
         {dots}
       </g>
     )
@@ -218,24 +200,16 @@ function JourneyViz({ scans }) {
     const anchor = labelLeft ? 'end' : 'start'
 
     return (
-      <g
-        key={i}
-        onClick={() => setSelectedArtwork(scan.artwork)}
-        style={{ cursor: 'pointer' }}
-      >
-        {/* Invisible tap target */}
+      <g key={i} onClick={() => setSelectedArtwork(scan.artwork)} style={{ cursor: 'pointer' }}>
         <circle cx={p.x} cy={p.y} r={r * 2.2} fill="transparent" />
-
         {[1.9, 1.55, 1.25].map((scale, li) => (
           <circle key={li} cx={p.x} cy={p.y} r={r * scale}
-            fill={c1} opacity={[0.04, 0.06, 0.10][li]}
-            filter={`url(#wc${i})`} />
+            fill={c1} opacity={[0.04, 0.06, 0.10][li]} filter={`url(#wc${i})`} />
         ))}
         <circle cx={p.x} cy={p.y} r={r * 0.88} fill={c1} opacity="0.18" filter={`url(#wc2${i})`} />
         <circle cx={p.x} cy={p.y} r={r * 0.58} fill={c2} opacity="0.35" />
         <circle cx={p.x} cy={p.y} r={r * 0.3} fill={c3} opacity="0.55" />
         <circle cx={p.x - r * 0.06} cy={p.y - r * 0.06} r="1.8" fill="white" opacity="0.75" />
-
         <text x={lx} y={p.y - 2} textAnchor={anchor}
           fontSize="9" fill="#1c1a15" opacity="0.55"
           fontFamily="var(--font-serif)" fontStyle="italic">
@@ -254,26 +228,18 @@ function JourneyViz({ scans }) {
 
   return (
     <>
-      <svg
-        ref={svgRef}
-        viewBox={viewBox}
-        width="100%"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ display: 'block' }}
-      >
+      <svg ref={svgRef} viewBox={viewBox} width="100%"
+        xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
         <defs dangerouslySetInnerHTML={{ __html: filterDefs }} />
-        <rect width={W} height={totalH} fill="#f5f0e8" />
-
+        <rect width={W} height={totalH} fill="var(--color-bg)" />
         <circle cx={pts[0].x} cy={pts[0].y} r="3" fill="#1c1a15" opacity="0.3" />
         <text x={pts[0].x} y={pts[0].y - 10} textAnchor="middle"
           fontSize="8" fill="#1c1a15" opacity="0.35"
           fontFamily="var(--font-mono)" letterSpacing="0.08em">
           entrance
         </text>
-
         {pathEls}
         {bubbles}
-
         <text x={W / 2} y={totalH - 16} textAnchor="middle"
           fontSize="8" fill="#1c1a15" opacity="0.22"
           fontFamily="var(--font-mono)" letterSpacing="0.1em">
@@ -282,10 +248,7 @@ function JourneyViz({ scans }) {
       </svg>
 
       {selectedArtwork && (
-        <ArtworkModal
-          artwork={selectedArtwork}
-          onClose={() => setSelectedArtwork(null)}
-        />
+        <ArtworkModal artwork={selectedArtwork} onClose={() => setSelectedArtwork(null)} />
       )}
     </>
   )
@@ -294,20 +257,17 @@ function JourneyViz({ scans }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Explore() {
-  const [sessions, setSessions] = useState([])   // [{ id, scans: [...] }]
+  const [sessions, setSessions] = useState([])
   const [activeIdx, setActiveIdx] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    loadAllSessions()
-  }, [])
+  useEffect(() => { loadAllSessions() }, [])
 
   async function loadAllSessions() {
     setLoading(true)
     setError(null)
 
-    // Fetch all sessions that have at least one scan
     const { data: sessionRows, error: sessErr } = await supabase
       .from('sessions')
       .select('id')
@@ -319,7 +279,6 @@ export default function Explore() {
       return
     }
 
-    // Fetch scans for all sessions in one query
     const sessionIds = sessionRows.map(s => s.id)
     const { data: scanRows, error: scanErr } = await supabase
       .from('scans')
@@ -333,7 +292,6 @@ export default function Explore() {
       return
     }
 
-    // Group scans by session, keep only sessions with 1+ scans
     const grouped = sessionRows.reduce((acc, s) => {
       const scans = (scanRows || [])
         .filter(r => r.session_id === s.id)
@@ -352,28 +310,26 @@ export default function Explore() {
     setLoading(false)
   }
 
-  // ── Loading ──
   if (loading) {
     return (
-      <div style={{ background: '#f5f2eb', minHeight: '100vh' }}>
+      <div style={{ minHeight: '100vh' }}>
         <Nav />
-        <main className="flex items-center justify-center" style={{ fontFamily: 'var(--font-mono)', paddingTop: 80 }}>
+        <main className="flex items-center justify-center" style={{ paddingTop: 80 }}>
           <div className="flex flex-col items-center gap-3">
             <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
-            <p className="text-xs text-neutral-400 tracking-[0.2em] uppercase">Loading journeys...</p>
+            <p className="t-label">Loading journeys...</p>
           </div>
         </main>
       </div>
     )
   }
 
-  // ── Error ──
   if (error) {
     return (
-      <div style={{ background: '#f5f2eb', minHeight: '100vh' }}>
+      <div style={{ minHeight: '100vh' }}>
         <Nav />
-        <main className="flex items-center justify-center" style={{ fontFamily: 'var(--font-mono)', paddingTop: 80 }}>
-          <p className="text-xs text-neutral-400 tracking-[0.2em] uppercase">{error}</p>
+        <main className="flex items-center justify-center" style={{ paddingTop: 80 }}>
+          <p className="t-label">{error}</p>
         </main>
       </div>
     )
@@ -381,77 +337,52 @@ export default function Explore() {
 
   const active = sessions[activeIdx]
 
-  // ── Main view ──
   return (
-    <div style={{ background: '#f5f2eb', minHeight: '100vh', fontFamily: 'var(--font-mono)' }}>
+    <div style={{ minHeight: '100vh' }}>
       <Nav />
       <main className="flex flex-col">
 
-      {/* Title */}
-      <div className="px-8 pt-8 mb-6">
-        <p className="text-xs text-neutral-400 tracking-[0.15em] uppercase mb-1">
-          {sessions.length} journey{sessions.length !== 1 ? 's' : ''}
-        </p>
-        <h1
-          className="text-4xl text-neutral-900 leading-tight mb-1"
-          style={{ fontFamily: 'var(--font-serif)' }}
-        >
-          What's Left?
-        </h1>
-        <p className="text-xs text-neutral-400 tracking-[0.15em] uppercase">
-          Exhibition journeys
-        </p>
-      </div>
-
-      {/* Session selector */}
-      <div className="px-8 mb-8">
-        <p className="text-xs text-neutral-300 tracking-[0.15em] uppercase mb-3">
-          Select a journey
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {sessions.map((s, i) => (
-            <button
-              key={s.id}
-              onClick={() => setActiveIdx(i)}
-              style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 11,
-                letterSpacing: '0.1em',
-                padding: '6px 14px',
-                border: activeIdx === i
-                  ? '0.5px solid #1c1a15'
-                  : '0.5px solid rgba(28,26,21,0.2)',
-                background: activeIdx === i ? '#1c1a15' : 'transparent',
-                color: activeIdx === i ? '#f5f2eb' : 'rgba(28,26,21,0.45)',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-              }}
-            >
-              {shortId(s.id)}
-            </button>
-          ))}
+        <div className="px-8 pt-8 mb-6">
+          <p className="t-label mb-1">{sessions.length} journey{sessions.length !== 1 ? 's' : ''}</p>
+          <h1 className="t-heading mb-1">What's Left?</h1>
+          <p className="t-label">Exhibition journeys</p>
         </div>
-      </div>
 
-      {/* Journey meta */}
-      <div className="px-8 mb-4 flex items-center gap-4">
-        <span className="text-xs text-neutral-300 tracking-[0.1em]">
-          {active.scans.length} work{active.scans.length !== 1 ? 's' : ''} visited
-        </span>
-        <span className="text-neutral-200">·</span>
-        <span className="text-xs text-neutral-300 tracking-[0.1em]">
-          Tap a bubble to explore
-        </span>
-      </div>
+        <div className="px-8 mb-8">
+          <p className="t-label mb-3">Select a journey</p>
+          <div className="flex flex-wrap gap-2">
+            {sessions.map((s, i) => (
+              <button
+                key={s.id}
+                onClick={() => setActiveIdx(i)}
+                className="t-label"
+                style={{
+                  padding: '6px 14px',
+                  border: activeIdx === i ? '0.5px solid var(--color-ink)' : '0.5px solid rgba(28,26,21,0.2)',
+                  background: activeIdx === i ? 'var(--color-ink)' : 'transparent',
+                  color: activeIdx === i ? 'var(--color-bg)' : undefined,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                }}
+              >
+                {shortId(s.id)}
+              </button>
+            ))}
+          </div>
+        </div>
 
-      {/* Divider */}
-      <div className="mx-8 mb-6 border-t border-neutral-200" />
+        <div className="px-8 mb-4 flex items-center gap-4">
+          <span className="t-label">{active.scans.length} work{active.scans.length !== 1 ? 's' : ''} visited</span>
+          <span className="t-label">·</span>
+          <span className="t-label">Tap a bubble to explore</span>
+        </div>
 
-      {/* Visualization */}
-      <div className="px-8 pb-16">
-        <JourneyViz key={active.id} scans={active.scans} />
-      </div>
-    </main>
+        <div className="mx-8 mb-6 border-t border-neutral-200" />
+
+        <div className="px-8 pb-16">
+          <JourneyViz key={active.id} scans={active.scans} />
+        </div>
+      </main>
     </div>
   )
 }

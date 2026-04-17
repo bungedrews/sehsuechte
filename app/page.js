@@ -6,30 +6,22 @@ export default function Home() {
   const router = useRouter()
 
   return (
-    <main
-      className="h-screen flex flex-col pt-[10px] pb-[10px] px-8 overflow-hidden"
-      style={{ fontFamily: 'var(--font-mono)', background: '#f5f2eb' }}
-    >
+    <main className="h-screen flex flex-col pt-[10px] pb-[10px] px-8 overflow-hidden">
 
-      {/* Top bar */}
       <div className="flex justify-between items-center shrink-0">
-        <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">Sehsüchte</span>
-        <span className="text-xs tracking-[0.2em] text-neutral-400 uppercase">2026</span>
+        <span className="t-label">Sehsüchte</span>
+        <span className="t-label">2026</span>
       </div>
 
-      {/* Center content */}
       <div className="flex-1 flex flex-col justify-center gap-6 min-h-0">
         <div className="flex flex-col gap-3">
-          <p className="text-xs tracking-[0.25em] text-neutral-400 uppercase">Exhibition</p>
-          <h1
-            className="text-5xl md:text-6xl leading-[1.05] text-neutral-900"
-            style={{ fontFamily: 'var(--font-serif)' }}
-          >
+          <p className="t-label">Exhibition</p>
+          <h1 className="t-heading">
             Welcome<br />curious explorer!
           </h1>
         </div>
 
-        <p className="text-sm text-neutral-500 leading-relaxed max-w-[260px]">
+        <p className="t-body max-w-[360px]">
           Move through the space. Collect the works that speak to you.
         </p>
 
@@ -37,18 +29,13 @@ export default function Home() {
           onClick={() => router.push('/checkin')}
           className="w-fit flex items-center gap-3 group mt-2"
         >
-          <span className="text-xs tracking-[0.2em] text-neutral-900 uppercase group-hover:text-neutral-500 transition-colors duration-300">
-            Begin Journey
-          </span>
-          <span className="text-neutral-400 group-hover:translate-x-1 transition-transform duration-300">
-            →
-          </span>
+          <span className="t-label" style={{ color: 'var(--color-ink)' }}>Begin Journey</span>
+          <span className="t-label group-hover:translate-x-1 transition-transform duration-300">→</span>
         </button>
       </div>
 
-      {/* Bottom */}
       <div className="flex justify-between items-end shrink-0">
-        <span className="text-xs text-neutral-300 tracking-widest">POI</span>
+        <span className="t-label">POI</span>
         <div className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
       </div>
 
