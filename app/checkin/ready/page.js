@@ -24,8 +24,8 @@ const PALETTES = [
 
 const MINS_PER_DOT = 10
 const W = 340
-const MIN_SEG = 38
-const MAX_SEG = 100
+const MIN_SEG = 60
+const MAX_SEG = 160
 
 function qbez(ax, ay, cx, cy, bx, by, t) {
   const mt = 1 - t
@@ -151,7 +151,7 @@ function JourneyViz({ scans }) {
     deltas = [0]
   }
 
-  const totalH = Math.max(...pts.map(p => p.y)) + 80
+  const totalH = Math.max(Math.max(...pts.map(p => p.y)) + 80, 600)
   const viewBox = `0 0 ${W} ${totalH}`
 
   const filterDefs = safeScans.map((_, i) => `
@@ -199,7 +199,7 @@ function JourneyViz({ scans }) {
     if (!p) return null
     const [c1, c2, c3] = PALETTES[i % PALETTES.length]
     const dwell = i < deltas.length ? Math.min(Math.max(deltas[i], 0), 35) : 10
-    const r = 11 + dwell * 0.85
+    const r = 18 + dwell * 1.1
     const labelLeft = p.x > W * 0.6
     const lx = labelLeft ? p.x - r - 8 : p.x + r + 8
     const anchor = labelLeft ? 'end' : 'start'
@@ -454,7 +454,7 @@ function ReadyContent() {
 
   // ── Scanning view ─────────────────────────────────────────────────────────
   return (
-    <main className="min-h-screen flex flex-col p-8 gap-8">
+    <main className="min-h-screen flex flex-col p-8 pb-24 gap-8">
       <div className="flex justify-between items-center">
         <span className="t-label">Sehsüchte</span>
         <span className="t-label">{scannedArtworks.length} saved</span>
@@ -464,7 +464,7 @@ function ReadyContent() {
         <h2 className="t-heading">Your Journey</h2>
         <p className="t-body">
           {scannedArtworks.length === 0
-            ? 'Tap your phone on an artwork to begin.'
+            ? 'Tap your phone on the signs next to the artworks to begin.'
             : 'Tap artworks to add them.'}
         </p>
       </div>
@@ -479,8 +479,8 @@ function ReadyContent() {
 
       <JourneyViz scans={scans} />
 
-      <div className="flex justify-between items-end mt-auto">
-        <p className="t-body">Tap exit tag<br />to finish</p>
+      <div className="fixed bottom-10 left-10 right-0 flex justify-between items-end p-8 pb-10 pointer-events-none">
+        <p className="t-body"> → Go to the Exit poster to finish your journey at the exhibition</p>
         <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
       </div>
     </main>

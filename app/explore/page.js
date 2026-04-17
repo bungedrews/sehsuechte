@@ -234,7 +234,7 @@ function JourneyViz({ scans }) {
         <rect width={W} height={totalH} fill="var(--color-bg)" />
         <circle cx={pts[0].x} cy={pts[0].y} r="3" fill="#1c1a15" opacity="0.3" />
         <text x={pts[0].x} y={pts[0].y - 10} textAnchor="middle"
-          fontSize="8" fill="#1c1a15" opacity="0.35"
+          fontSize="12" fill="#1c1a15" opacity="0.35"
           fontFamily="var(--font-mono)" letterSpacing="0.08em">
           entrance
         </text>
