@@ -180,14 +180,14 @@ function JourneyViz({ scans }) {
         const t = d / (numDots + 1)
         const bp = qbez(a.x, a.y, cpx, cpy, b.x, b.y, t)
         dots.push(
-          <circle key={d} cx={bp.x.toFixed(2)} cy={bp.y.toFixed(2)} r="2" fill="#1c1a15" opacity="0.45" />
+          <circle key={d} cx={bp.x.toFixed(2)} cy={bp.y.toFixed(2)} r="4" fill="#1c1a15" opacity="0.45" />
         )
       }
 
       pathEls.push(
         <g key={i}>
           <path d={`M${a.x},${a.y} Q${cpx},${cpy} ${b.x},${b.y}`}
-            fill="none" stroke="#1c1a15" strokeWidth="0.55" opacity="0.28" />
+            fill="none" stroke="#1c1a15" strokeWidth="1.2" opacity="0.28" />
           {dots}
         </g>
       )
@@ -199,7 +199,7 @@ function JourneyViz({ scans }) {
     if (!p) return null
     const [c1, c2, c3] = PALETTES[i % PALETTES.length]
     const dwell = i < deltas.length ? Math.min(Math.max(deltas[i], 0), 35) : 10
-    const r = 18 + dwell * 1.1
+    const r = 26 + dwell * 1.3
     const labelLeft = p.x > W * 0.6
     const lx = labelLeft ? p.x - r - 8 : p.x + r + 8
     const anchor = labelLeft ? 'end' : 'start'
@@ -214,14 +214,14 @@ function JourneyViz({ scans }) {
         <circle cx={p.x} cy={p.y} r={r * 0.88} fill={c1} opacity="0.18" filter={`url(#wc2${i})`} />
         <circle cx={p.x} cy={p.y} r={r * 0.58} fill={c2} opacity="0.35" />
         <circle cx={p.x} cy={p.y} r={r * 0.3} fill={c3} opacity="0.55" />
-        <circle cx={p.x - r * 0.06} cy={p.y - r * 0.06} r="1.8" fill="white" opacity="0.75" />
-        <text x={lx} y={p.y - 2} textAnchor={anchor}
-          fontSize="9" fill="#1c1a15" opacity="0.55"
+        <circle cx={p.x - r * 0.06} cy={p.y - r * 0.06} r="3" fill="white" opacity="0.75" />
+        <text x={lx} y={p.y - 4} textAnchor={anchor}
+          fontSize="14" fill="#1c1a15" opacity="0.55"
           fontFamily="var(--font-serif)" fontStyle="italic">
           {scan.artwork?.title}
         </text>
-        <text x={lx} y={p.y + 9} textAnchor={anchor}
-          fontSize="8" fill="#1c1a15" opacity="0.28"
+        <text x={lx} y={p.y + 13} textAnchor={anchor}
+          fontSize="12" fill="#1c1a15" opacity="0.28"
           fontFamily="var(--font-mono)">
           {scan.artwork?.artist}
         </text>
@@ -238,9 +238,9 @@ function JourneyViz({ scans }) {
         xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
         <defs dangerouslySetInnerHTML={{ __html: filterDefs }} />
         <rect width={W} height={totalH} fill="var(--color-bg)" />
-        <circle cx={pts[0].x} cy={pts[0].y} r="3" fill="#1c1a15" opacity="0.3" />
-        <text x={pts[0].x} y={pts[0].y - 10} textAnchor="middle"
-          fontSize="8" fill="#1c1a15" opacity="0.35"
+        <circle cx={pts[0].x} cy={pts[0].y} r="7" fill="#1c1a15" opacity="0.3" />
+        <text x={pts[0].x} y={pts[0].y - 18} textAnchor="middle"
+          fontSize="17" fill="#1c1a15" opacity="0.35"
           fontFamily="var(--font-mono)" letterSpacing="0.08em">
           entrance
         </text>
@@ -248,7 +248,7 @@ function JourneyViz({ scans }) {
         {bubbles}
         {totalMins !== null && (
           <text x={W / 2} y={totalH - 16} textAnchor="middle"
-            fontSize="8" fill="#1c1a15" opacity="0.22"
+            fontSize="12" fill="#1c1a15" opacity="0.22"
             fontFamily="var(--font-mono)" letterSpacing="0.1em">
             {totalMins} min total · {safeScans.length} works
           </text>
