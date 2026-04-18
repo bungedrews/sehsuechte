@@ -130,9 +130,10 @@ function JourneyViz({ scans }) {
     const times = safeScans.map(s => new Date(s.scanned_at).getTime())
     deltas = times.slice(1).map((t, i) => (t - times[i]) / 60000)
     const maxDelta = Math.max(...deltas, 1)
-    for (let i = 0; i < deltas.length; i++) {
+    for (let i = 0; i < safeScans.length; i++) {
       const prev = pts[i]
-      const segLen = MIN_SEG + (deltas[i] / maxDelta) * (MAX_SEG - MIN_SEG)
+      const d = deltas[i] ?? deltas[deltas.length - 1] ?? 1
+      const segLen = MIN_SEG + (d / maxDelta) * (MAX_SEG - MIN_SEG)
       const angle = 88 + (pseudoRand(seed, i + 1) - 0.5) * 80
       const rad = (angle * Math.PI) / 180
       pts.push({
