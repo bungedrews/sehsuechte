@@ -302,7 +302,7 @@ function JourneyViz({ scans }) {
 
   return (
     <>
-      <svg ref={svgRef} viewBox={viewBox} width="100%"
+      <svg ref={svgRef} id="journey-svg" viewBox={viewBox} width="100%"
         xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', overflow: 'visible' }}>
         <defs dangerouslySetInnerHTML={{ __html: filterDefs + clipDefs.join('') }} />
         <rect width={W} height={totalH} fill="var(--color-bg)" />
@@ -471,6 +471,17 @@ function ReadyContent() {
     )
   }
 
+  async function shareJourney() {
+    const sessionId = localStorage.getItem('session_id')
+    const title = `${sessionName ? `${sessionName}'s Journey` : 'My Journey'} at Sehsüchte`
+    const url = `${window.location.origin}/journey/${sessionId}`
+    if (navigator.share) {
+      await navigator.share({ title, url })
+    } else {
+      await navigator.clipboard?.writeText(url)
+    }
+  }
+
   // ── Finished view ─────────────────────────────────────────────────────────
   if (isFinished) {
     return (
@@ -478,6 +489,7 @@ function ReadyContent() {
         <Nav />
         <div className="flex flex-col p-8 gap-4 mt-20">
           <br/>
+        <div className="t-label">{sessionName ? `${sessionName}'s Journey` : 'Your Journey'}</div>
 
           <h1 className="t-heading">
             {scannedArtworks.length} work{scannedArtworks.length !== 1 ? 's' : ''}<br />explored
@@ -490,13 +502,22 @@ function ReadyContent() {
 
         <div className="fixed bottom-10 left-10 right-0 px-8 pb-10 pt-12 pointer-events-none"
           style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}>
-          <button
-            onClick={() => { localStorage.removeItem('session_id'); router.push('/') }}
-            className="w-fit flex items-center gap-3 group pointer-events-auto"
-          >
-            <span className="t-label">Start over</span>
-            <span className="t-label group-hover:translate-x-1 transition-transform duration-300">→</span>
-          </button>
+          <div className="flex items-center gap-6">
+            <button
+              onClick={shareJourney}
+              className="w-fit flex items-center gap-3 group pointer-events-auto"
+            >
+              <span className="t-label">Share</span>
+              <span className="t-label group-hover:translate-x-1 transition-transform duration-300">↑</span>
+            </button>
+            <button
+              onClick={() => { localStorage.removeItem('session_id'); router.push('/') }}
+              className="w-fit flex items-center gap-3 group pointer-events-auto"
+            >
+              <span className="t-label">Start over</span>
+              <span className="t-label group-hover:translate-x-1 transition-transform duration-300">→</span>
+            </button>
+          </div>
         </div>
       </main>
     )
