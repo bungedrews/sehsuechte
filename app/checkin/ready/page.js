@@ -195,7 +195,7 @@ function JourneyViz({ scans }) {
     }
   }
 
-  const maskDefs = []
+  const clipDefs = []
   const bubbles = safeScans.map((scan, i) => {
     const p = pts[i + 1]
     if (!p) return null
@@ -206,20 +206,13 @@ function JourneyViz({ scans }) {
     const lx = labelLeft ? p.x - r - 8 : p.x + r + 8
     const anchor = labelLeft ? 'end' : 'start'
 
-    const maskId = `lm${i}`
-    const maskX0 = labelLeft ? lx - 280 : lx
-    const maskX1 = maskX0 + 280
-    maskDefs.push(`
-      <mask id="${maskId}" maskUnits="userSpaceOnUse">
-        <rect x="${maskX0}" y="${p.y - 28}" width="280" height="56" fill="white">
-          <animate attributeName="x"
-            values="${maskX0};${maskX0};${maskX1};${maskX1};${maskX0}"
-            keyTimes="0;0.25;0.65;0.85;1"
-            calcMode="spline"
-            keySplines="0 0 1 1;0.35 0 0.65 1;0 0 1 1;0 0 1 1"
-            dur="9s" begin="${i * 2.2}s" repeatCount="indefinite"/>
-        </rect>
-      </mask>
+    const clipId = `cp${i}`
+    const clipX = labelLeft ? lx - 120 : lx
+    const dx = labelLeft ? 120 : -120
+    clipDefs.push(`
+      <clipPath id="${clipId}" clipPathUnits="userSpaceOnUse">
+        <rect x="${clipX}" y="${p.y - 22}" width="120" height="50"/>
+      </clipPath>
     `)
 
     return (
@@ -233,17 +226,27 @@ function JourneyViz({ scans }) {
         <circle cx={p.x} cy={p.y} r={r * 0.58} fill={c2} opacity="0.35" />
         <circle cx={p.x} cy={p.y} r={r * 0.3} fill={c3} opacity="0.55" />
         <circle cx={p.x - r * 0.06} cy={p.y - r * 0.06} r="3" fill="white" opacity="0.75" />
-        <g mask={`url(#${maskId})`}>
-          <text x={lx} y={p.y - 4} textAnchor={anchor}
-            fontSize="14" fill="#1c1a15" opacity="0.55"
-            fontFamily="var(--font-serif)" fontStyle="italic">
-            {scan.artwork?.title}
-          </text>
-          <text x={lx} y={p.y + 13} textAnchor={anchor}
-            fontSize="12" fill="#1c1a15" opacity="0.28"
-            fontFamily="var(--font-mono)">
-            {scan.artwork?.short}
-          </text>
+        <g clipPath={`url(#${clipId})`}>
+          <g>
+            <animateTransform
+              attributeName="transform" type="translate"
+              values={`0,0; 0,0; ${dx},0; ${dx},0; 0,0`}
+              keyTimes="0;0.25;0.65;0.82;1"
+              calcMode="spline"
+              keySplines="0 0 1 1;0.35 0 0.65 1;0 0 1 1;0 0 1 1"
+              dur="9s" begin={`${i * 2.5}s`} repeatCount="indefinite"
+            />
+            <text x={lx} y={p.y - 4} textAnchor={anchor}
+              fontSize="14" fill="#1c1a15" opacity="0.55"
+              fontFamily="var(--font-serif)" fontStyle="italic">
+              {scan.artwork?.title}
+            </text>
+            <text x={lx} y={p.y + 13} textAnchor={anchor}
+              fontSize="12" fill="#1c1a15" opacity="0.28"
+              fontFamily="var(--font-mono)">
+              {scan.artwork?.short}
+            </text>
+          </g>
         </g>
       </g>
     )
@@ -256,7 +259,7 @@ function JourneyViz({ scans }) {
     <>
       <svg ref={svgRef} viewBox={viewBox} width="100%"
         xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', overflow: 'visible' }}>
-        <defs dangerouslySetInnerHTML={{ __html: filterDefs + maskDefs.join('') }} />
+        <defs dangerouslySetInnerHTML={{ __html: filterDefs + clipDefs.join('') }} />
         <rect width={W} height={totalH} fill="var(--color-bg)" />
         <circle cx={pts[0].x} cy={pts[0].y} r="7" fill="#1c1a15" opacity="0.3" />
         <text x={pts[0].x} y={pts[0].y - 18} textAnchor="middle"
