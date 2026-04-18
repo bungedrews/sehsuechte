@@ -494,6 +494,25 @@ function ReadyContent() {
           <h1 className="t-heading">
             {scannedArtworks.length} work{scannedArtworks.length !== 1 ? 's' : ''}<br />explored
           </h1>
+
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSchGSojCsSAsabYxFWSUq3CbWw9h2ngj4D0wQXLYKq8t7h6rQ/viewform?usp=publish-editor"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              background: 'var(--color-ink)',
+              color: 'var(--color-bg)',
+              padding: '12px 20px',
+              width: 'fit-content',
+              textDecoration: 'none',
+            }}
+          >
+            <span className="t-label" style={{ color: 'inherit' }}>Take part in a short survey</span>
+            <span className="t-label" style={{ color: 'inherit' }}>→</span>
+          </a>
         </div>
 
         <div className="flex flex-col px-8 pb-24">
