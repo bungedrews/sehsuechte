@@ -22,7 +22,7 @@ const PALETTES = [
   ['#b0d8a0','#5aa060','#1a6030'],
 ]
 
-const MINS_PER_DOT = 10
+const MINS_PER_DOT = 5
 const W = 340
 const MIN_SEG = 130
 const MAX_SEG = 220
@@ -477,6 +477,8 @@ function ReadyContent() {
       <main className="min-h-screen flex flex-col">
         <Nav />
         <div className="flex flex-col p-8 gap-4 mt-20">
+          <br/>
+
           <h1 className="t-heading">
             {scannedArtworks.length} work{scannedArtworks.length !== 1 ? 's' : ''}<br />explored
           </h1>
@@ -486,11 +488,11 @@ function ReadyContent() {
           <JourneyViz scans={scans} />
         </div>
 
-        <div className="fixed bottom-10 left-0 right-0 px-8 pb-10 pt-12 pointer-events-none"
+        <div className="fixed bottom-10 left-10 right-0 px-8 pb-10 pt-12 pointer-events-none"
           style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}>
           <button
             onClick={() => { localStorage.removeItem('session_id'); router.push('/') }}
-            className="w-fit flex items-center gap-30 group pointer-events-auto"
+            className="w-fit flex items-center gap-3 group pointer-events-auto"
           >
             <span className="t-label">Start over</span>
             <span className="t-label group-hover:translate-x-1 transition-transform duration-300">→</span>

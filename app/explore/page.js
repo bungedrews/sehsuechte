@@ -21,7 +21,7 @@ const PALETTES = [
   ['#b0d8a0','#5aa060','#1a6030'],
 ]
 
-const MINS_PER_DOT = 10
+const MINS_PER_DOT = 5
 const W = 340
 const MIN_SEG = 130
 const MAX_SEG = 220
