@@ -85,7 +85,7 @@ function ArtworkModal({ artwork, onClose }) {
         )}
 
         <div style={{ padding: '24px 28px 0' }}>
-          <p className="t-label" style={{ marginBottom: 6 }}>{artwork.artist}</p>
+          <p className="t-label" style={{ marginBottom: 60 }}>{artwork.artist}</p>
           <h2 className="t-heading" style={{ fontSize: 26, marginBottom: 20 }}>{artwork.title}</h2>
           {artwork.description && (
             <p className="t-body" style={{ marginBottom: 28 }}>{artwork.description}</p>
@@ -291,7 +291,7 @@ function JourneyViz({ scans }) {
         {pathEls}
         {bubbles}
         {totalMins !== null && (
-          <text x={W / 2} y={totalH - 16} textAnchor="middle"
+          <text x={W / 2} y={totalH - 100} textAnchor="middle"
             fontSize="12" fill="#1c1a15" opacity="0.22"
             fontFamily="var(--font-mono)" letterSpacing="0.1em">
             {totalMins} min total · {safeScans.length} works
@@ -528,10 +528,10 @@ function ReadyContent() {
       <JourneyViz scans={scans} />
 
       <div
-        className="fixed bottom-0 left-0 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
+        className="fixed bottom-10 left-10 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
         style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}
       >
-        <p className="t-body"> → Go to the Exit poster to finish your journey at the exhibition</p>
+        <p className="t-body"> → Go to the EXIT poster to finish your journey at the exhibition</p>
         <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
       </div>
     </main>
