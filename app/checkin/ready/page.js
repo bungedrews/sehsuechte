@@ -592,11 +592,11 @@ function ReadyContent() {
       )}
 
       <div
-        className="fixed bottom-7 left-10 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
+        className="fixed bottom-6 left-10 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
         style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}
       >
         <p className="t-body"> → Go to the EXIT poster to finish your journey at the exhibition</p>
-        <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
+        <div className="w-1.5 h-2.5 rounded-full bg-neutral-300 animate-pulse" />
       </div>
     </main>
   )
