@@ -115,6 +115,23 @@ function ArtworkModal({ artwork, onClose }) {
 
 // ─── Journey Visualization ────────────────────────────────────────────────────
 
+function wrapTitle(title) {
+  const words = (title || '').split(' ')
+  const lines = []
+  let current = ''
+  for (const word of words) {
+    const test = current ? `${current} ${word}` : word
+    if (test.length * 7.5 > 120 && current) {
+      lines.push(current)
+      current = word
+    } else {
+      current = test
+    }
+  }
+  if (current) lines.push(current)
+  return lines
+}
+
 function JourneyViz({ scans }) {
   const svgRef = useRef(null)
   const [selectedArtwork, setSelectedArtwork] = useState(null)
@@ -206,12 +223,14 @@ function JourneyViz({ scans }) {
     const lx = labelLeft ? p.x - r - 8 : p.x + r + 8
     const anchor = labelLeft ? 'end' : 'start'
 
+    const titleLines = wrapTitle(scan.artwork?.title)
+    const shortY = p.y - 4 + titleLines.length * 17 + 8
     const clipId = `cp${i}`
     const clipX = labelLeft ? lx - 120 : lx
     const dx = labelLeft ? 120 : -120
     clipDefs.push(`
       <clipPath id="${clipId}" clipPathUnits="userSpaceOnUse">
-        <rect x="${clipX}" y="${p.y - 22}" width="120" height="50"/>
+        <rect x="${clipX}" y="${shortY - 14}" width="120" height="20"/>
       </clipPath>
     `)
 
@@ -226,6 +245,13 @@ function JourneyViz({ scans }) {
         <circle cx={p.x} cy={p.y} r={r * 0.58} fill={c2} opacity="0.35" />
         <circle cx={p.x} cy={p.y} r={r * 0.3} fill={c3} opacity="0.55" />
         <circle cx={p.x - r * 0.06} cy={p.y - r * 0.06} r="3" fill="white" opacity="0.75" />
+        {titleLines.map((line, li) => (
+          <text key={li} x={lx} y={p.y - 4 + li * 17} textAnchor={anchor}
+            fontSize="14" fill="#1c1a15" opacity="0.55"
+            fontFamily="var(--font-serif)" fontStyle="italic">
+            {line}
+          </text>
+        ))}
         <g clipPath={`url(#${clipId})`}>
           <g>
             <animateTransform
@@ -236,12 +262,7 @@ function JourneyViz({ scans }) {
               keySplines="0 0 1 1;0.35 0 0.65 1;0 0 1 1;0 0 1 1"
               dur="9s" begin={`${i * 2.5}s`} repeatCount="indefinite"
             />
-            <text x={lx} y={p.y - 4} textAnchor={anchor}
-              fontSize="14" fill="#1c1a15" opacity="0.55"
-              fontFamily="var(--font-serif)" fontStyle="italic">
-              {scan.artwork?.title}
-            </text>
-            <text x={lx} y={p.y + 13} textAnchor={anchor}
+            <text x={lx} y={shortY} textAnchor={anchor}
               fontSize="12" fill="#1c1a15" opacity="0.28"
               fontFamily="var(--font-mono)">
               {scan.artwork?.short}
