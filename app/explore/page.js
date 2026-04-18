@@ -427,7 +427,7 @@ export default function Explore() {
         </div>
 
         <div className="px-8 mb-8">
-          <p className="t-label mb-3">Select a journey</p>
+          <p className="t-label mb-3">Explore other journeys</p>
           <br/>
           <div className="flex flex-wrap gap-2">
             {sessions.map((s, i) => (
