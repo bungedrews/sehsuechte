@@ -24,8 +24,8 @@ const PALETTES = [
 
 const MINS_PER_DOT = 10
 const W = 340
-const MIN_SEG = 60
-const MAX_SEG = 160
+const MIN_SEG = 130
+const MAX_SEG = 220
 
 function qbez(ax, ay, cx, cy, bx, by, t) {
   const mt = 1 - t
@@ -224,7 +224,7 @@ function JourneyViz({ scans }) {
     const anchor = labelLeft ? 'end' : 'start'
 
     const titleLines = wrapTitle(scan.artwork?.title)
-    const shortY = p.y - 4 + titleLines.length * 17 + 8
+    const shortY = p.y - 4 + titleLines.length * 17 + 3
     const clipId = `cp${i}`
     const clipX = labelLeft ? lx - 120 : lx
     const dx = labelLeft ? 120 : -120
@@ -260,7 +260,7 @@ function JourneyViz({ scans }) {
               keyTimes="0;0.25;0.65;0.82;1"
               calcMode="spline"
               keySplines="0 0 1 1;0.35 0 0.65 1;0 0 1 1;0 0 1 1"
-              dur="9s" begin={`${i * 2.5}s`} repeatCount="indefinite"
+              dur="15s" begin={`${i * 2.5}s`} repeatCount="indefinite"
             />
             <text x={lx} y={shortY} textAnchor={anchor}
               fontSize="12" fill="#1c1a15" opacity="0.28"
