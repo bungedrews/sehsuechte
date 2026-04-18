@@ -216,16 +216,20 @@ function JourneyViz({ scans }) {
         <circle cx={p.x} cy={p.y} r={r * 0.58} fill={c2} opacity="0.35" />
         <circle cx={p.x} cy={p.y} r={r * 0.3} fill={c3} opacity="0.55" />
         <circle cx={p.x - r * 0.06} cy={p.y - r * 0.06} r="3" fill="white" opacity="0.75" />
-        <text x={lx} y={p.y - 4} textAnchor={anchor}
-          fontSize="14" fill="#1c1a15" opacity="0.55"
-          fontFamily="var(--font-serif)" fontStyle="italic">
-          {scan.artwork?.title}
-        </text>
-        <text x={lx} y={p.y + 13} textAnchor={anchor}
-          fontSize="12" fill="#1c1a15" opacity="0.28"
-          fontFamily="var(--font-mono)">
-          {scan.artwork?.artist}
-        </text>
+        <g style={{
+          animation: `${labelLeft ? 'labelScrollRight' : 'labelScrollLeft'} 10s ease-in-out ${i * 1.8}s infinite`
+        }}>
+          <text x={lx} y={p.y - 4} textAnchor={anchor}
+            fontSize="14" fill="#1c1a15" opacity="0.55"
+            fontFamily="var(--font-serif)" fontStyle="italic">
+            {scan.artwork?.title}
+          </text>
+          <text x={lx} y={p.y + 13} textAnchor={anchor}
+            fontSize="12" fill="#1c1a15" opacity="0.28"
+            fontFamily="var(--font-mono)">
+            {scan.artwork?.short}
+          </text>
+        </g>
       </g>
     )
   })
@@ -236,8 +240,20 @@ function JourneyViz({ scans }) {
   return (
     <>
       <svg ref={svgRef} viewBox={viewBox} width="100%"
-        xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+        xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', overflow: 'visible' }}>
         <defs dangerouslySetInnerHTML={{ __html: filterDefs }} />
+        <style>{`
+          @keyframes labelScrollLeft {
+            0%, 20% { transform: translateX(0); }
+            65%, 85% { transform: translateX(-70px); }
+            100% { transform: translateX(0); }
+          }
+          @keyframes labelScrollRight {
+            0%, 20% { transform: translateX(0); }
+            65%, 85% { transform: translateX(70px); }
+            100% { transform: translateX(0); }
+          }
+        `}</style>
         <rect width={W} height={totalH} fill="var(--color-bg)" />
         <circle cx={pts[0].x} cy={pts[0].y} r="7" fill="#1c1a15" opacity="0.3" />
         <text x={pts[0].x} y={pts[0].y - 18} textAnchor="middle"
@@ -330,7 +346,7 @@ function ReadyContent() {
   async function loadScans(sessionId) {
     const { data, error } = await supabase
       .from('scans')
-      .select('scanned_at, artwork_id, artworks(id, title, artist, nfc_code, description, image_url)')
+      .select('scanned_at, artwork_id, artworks(id, title, artist, short, nfc_code, description, image_url)')
       .eq('session_id', sessionId)
       .order('scanned_at', { ascending: true })
 
@@ -355,7 +371,7 @@ function ReadyContent() {
 
     const { data: artwork, error } = await supabase
       .from('artworks')
-      .select('id, title, artist, nfc_code, description, image_url')
+      .select('id, title, artist, short, nfc_code, description, image_url')
       .eq('nfc_code', code)
       .single()
 
