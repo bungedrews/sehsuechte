@@ -169,7 +169,7 @@ function JourneyViz({ scans }) {
     deltas = [0]
   }
 
-  const totalH = Math.max(Math.max(...pts.map(p => p.y)) + 80, 600)
+  const totalH = Math.max(Math.max(...pts.map(p => p.y)) + 160, 600)
   const viewBox = `0 0 ${W} ${totalH}`
 
   const filterDefs = safeScans.map((_, i) => `
@@ -527,7 +527,10 @@ function ReadyContent() {
 
       <JourneyViz scans={scans} />
 
-      <div className="fixed bottom-10 left-10 right-0 flex justify-between items-end p-8 pb-10 pointer-events-none">
+      <div
+        className="fixed bottom-0 left-0 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}
+      >
         <p className="t-body"> → Go to the Exit poster to finish your journey at the exhibition</p>
         <div className="w-1.5 h-1.5 rounded-full bg-neutral-300 animate-pulse" />
       </div>
