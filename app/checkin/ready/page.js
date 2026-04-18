@@ -356,8 +356,13 @@ function ReadyContent() {
           if (record.recordType === 'url') {
             const decoder = new TextDecoder()
             const url = decoder.decode(record.data)
-            const code = new URL(url).searchParams.get('code')
-            if (code) await handleScan(code, sessionId)
+            const parsed = new URL(url)
+            const code = parsed.searchParams.get('code')
+            if (code) {
+              await handleScan(code, sessionId)
+            } else if (parsed.pathname === '/summary') {
+              window.location.href = url
+            }
           }
         }
       }
@@ -452,31 +457,21 @@ function ReadyContent() {
     return (
       <main className="min-h-screen flex flex-col">
         <Nav />
-        <div className="flex flex-col p-8 gap-12">
-          <div className="flex flex-col gap-3">
-            <p className="t-label">Your collection</p>
-            <h1 className="t-heading">
-              {scannedArtworks.length} work{scannedArtworks.length !== 1 ? 's' : ''}<br />explored
-            </h1>
-          </div>
+        <div className="flex flex-col p-8 gap-4 mt-20">
+          <h1 className="t-heading">
+            {scannedArtworks.length} work{scannedArtworks.length !== 1 ? 's' : ''}<br />explored
+          </h1>
+        </div>
 
-          <div className="flex flex-col gap-0 border-t border-neutral-200">
-            {scannedArtworks.map((artwork, i) => (
-              <div key={i} className="flex items-start gap-4 py-5 border-b border-neutral-200">
-                <span className="t-label w-6 pt-0.5 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                <div className="flex flex-col gap-0.5">
-                  <p className="t-body" style={{ color: 'var(--color-ink)' }}>{artwork.title}</p>
-                  <p className="t-body">{artwork.artist}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
+        <div className="flex flex-col px-8 pb-24">
           <JourneyViz scans={scans} />
+        </div>
 
+        <div className="fixed bottom-0 left-0 right-0 px-8 pb-10 pt-12 pointer-events-none"
+          style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}>
           <button
             onClick={() => { localStorage.removeItem('session_id'); router.push('/') }}
-            className="w-fit flex items-center gap-3 group mt-auto"
+            className="w-fit flex items-center gap-3 group pointer-events-auto"
           >
             <span className="t-label">Start over</span>
             <span className="t-label group-hover:translate-x-1 transition-transform duration-300">→</span>

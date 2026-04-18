@@ -50,6 +50,15 @@ input:-webkit-autofill {
   color: rgba(28, 26, 21, 0.45);
 }
 
+.t-label-2 {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-top: 1cm;
+  border-bottom: 2cm;
+  color: rgba(28, 26, 21, 0.45);
+}
+
 /* Serif page heading — used for all h1 / h2 across the site */
 .t-heading {
   font-family: var(--font-serif);
