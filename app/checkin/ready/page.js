@@ -318,6 +318,7 @@ function ReadyContent() {
   const [loading, setLoading] = useState(true)
   const [nfcStatus, setNfcStatus] = useState(null)
   const [nfcSupported, setNfcSupported] = useState(false)
+  const scannedCodesRef = useRef(new Set())
 
   useEffect(() => {
     const sessionId = localStorage.getItem('session_id')
@@ -389,6 +390,7 @@ function ReadyContent() {
     if (!error && data) {
       setScannedArtworks(data.map(s => s.artworks))
       setScans(data.map(s => ({ scanned_at: s.scanned_at, artwork: s.artworks })))
+      data.forEach(s => s.artworks?.nfc_code && scannedCodesRef.current.add(s.artworks.nfc_code))
     }
     setLoading(false)
   }
@@ -398,8 +400,7 @@ function ReadyContent() {
     if (!id) return
     setNfcStatus('scanning')
 
-    const alreadyScanned = scannedArtworks.find(a => a.nfc_code === code)
-    if (alreadyScanned) {
+    if (scannedCodesRef.current.has(code)) {
       setNfcStatus('already')
       setTimeout(() => setNfcStatus('scanning'), 2000)
       return
@@ -428,6 +429,7 @@ function ReadyContent() {
       return
     }
 
+    scannedCodesRef.current.add(code)
     setScannedArtworks(prev => [...prev, artwork])
     setScans(prev => [...prev, { scanned_at: now, artwork }])
     setNfcStatus('success')
@@ -522,8 +524,16 @@ function ReadyContent() {
 
       <JourneyViz scans={scans} />
 
+      {nfcStatus === 'already' && (
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50
+          bg-neutral-900 text-white px-6 py-4 rounded-lg shadow-lg pointer-events-none"
+          style={{ animation: 'fadeIn 0.2s ease' }}>
+          <p className="t-label" style={{ color: 'white', letterSpacing: '0.08em' }}>Already scanned!</p>
+        </div>
+      )}
+
       <div
-        className="fixed bottom-10 left-10 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
+        className="fixed bottom-0 left-0 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
         style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}
       >
         <p className="t-body"> → Go to the EXIT poster to finish your journey at the exhibition</p>
