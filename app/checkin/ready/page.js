@@ -121,7 +121,7 @@ function wrapTitle(title) {
   let current = ''
   for (const word of words) {
     const test = current ? `${current} ${word}` : word
-    if (test.length * 7.5 > 120 && current) {
+    if (test.length * 7.5 > 160 && current) {
       lines.push(current)
       current = word
     } else {
@@ -313,6 +313,7 @@ function ReadyContent() {
   const searchParams = useSearchParams()
   const [scannedArtworks, setScannedArtworks] = useState([])
   const [scans, setScans] = useState([])
+  const [sessionName, setSessionName] = useState('')
   const [isFinished, setIsFinished] = useState(false)
   const [loading, setLoading] = useState(true)
   const [nfcStatus, setNfcStatus] = useState(null)
@@ -371,12 +372,15 @@ function ReadyContent() {
   }
 
   async function loadScans(sessionId) {
-    const { data, error } = await supabase
-      .from('scans')
-      .select('scanned_at, artwork_id, artworks(id, title, artist, short, nfc_code, description, image_url)')
-      .eq('session_id', sessionId)
-      .order('scanned_at', { ascending: true })
+    const [{ data: sessionData }, { data, error }] = await Promise.all([
+      supabase.from('sessions').select('name').eq('id', sessionId).single(),
+      supabase.from('scans')
+        .select('scanned_at, artwork_id, artworks(id, title, artist, short, nfc_code, description, image_url)')
+        .eq('session_id', sessionId)
+        .order('scanned_at', { ascending: true }),
+    ])
 
+    if (sessionData?.name) setSessionName(sessionData.name)
     if (!error && data) {
       setScannedArtworks(data.map(s => s.artworks))
       setScans(data.map(s => ({ scanned_at: s.scanned_at, artwork: s.artworks })))
@@ -505,7 +509,7 @@ function ReadyContent() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <h2 className="t-heading">Your Journey</h2>
+        <h2 className="t-heading">{sessionName ? `${sessionName}'s Journey` : 'Your Journey'}</h2>
         <p className="t-body">
           {scannedArtworks.length === 0
             ? 'Tap your phone on the signs next to the artworks to begin.'
