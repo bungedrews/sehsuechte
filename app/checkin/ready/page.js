@@ -43,10 +43,31 @@ function pseudoRand(seed, n) {
 // ─── Artwork Modal ────────────────────────────────────────────────────────────
 
 function ArtworkModal({ artwork, onClose }) {
+  const touchStartY = useRef(0)
+  const [dragY, setDragY] = useState(0)
+  const [dragging, setDragging] = useState(false)
+
   useEffect(() => {
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = '' }
   }, [])
+
+  const onTouchStart = (e) => {
+    touchStartY.current = e.touches[0].clientY
+    setDragging(true)
+  }
+  const onTouchMove = (e) => {
+    const delta = e.touches[0].clientY - touchStartY.current
+    if (delta > 0) setDragY(delta)
+  }
+  const onTouchEnd = () => {
+    setDragging(false)
+    if (dragY > 80) {
+      onClose()
+    } else {
+      setDragY(0)
+    }
+  }
 
   if (!artwork) return null
 
@@ -56,25 +77,31 @@ function ArtworkModal({ artwork, onClose }) {
         onClick={onClose}
         style={{
           position: 'fixed', inset: 0,
-          background: 'rgba(28,26,21,0.45)',
+          background: `rgba(28,26,21,${0.45 * (1 - dragY / 300)})`,
           zIndex: 40,
-          animation: 'fadeIn 0.2s ease',
+          animation: dragging ? 'none' : 'fadeIn 0.2s ease',
         }}
       />
       <div
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
         style={{
           position: 'fixed', left: 0, right: 0, bottom: 0,
           zIndex: 50,
           background: 'var(--color-bg)',
           borderRadius: '16px 16px 0 0',
           padding: '0 0 40px',
-          animation: 'slideUp 0.28s cubic-bezier(0.32,0.72,0,1)',
+          animation: dragging ? 'none' : 'slideUp 0.28s cubic-bezier(0.32,0.72,0,1)',
           maxHeight: '90vh',
-          overflowY: 'auto',
+          overflowY: dragY > 0 ? 'hidden' : 'auto',
+          transform: `translateY(${dragY}px)`,
+          transition: dragging ? 'none' : 'transform 0.3s cubic-bezier(0.32,0.72,0,1)',
+          touchAction: 'pan-y',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'center', padding: '14px 0 10px' }}>
-          <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(28,26,21,0.15)' }} />
+          <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(28,26,21,0.25)' }} />
         </div>
 
         {artwork.image_url && (
@@ -273,9 +300,6 @@ function JourneyViz({ scans }) {
     )
   })
 
-  const allTimes = safeScans.length >= 2 ? safeScans.map(s => new Date(s.scanned_at).getTime()) : null
-  const totalMins = allTimes ? Math.round((allTimes[allTimes.length - 1] - allTimes[0]) / 60000) : null
-
   return (
     <>
       <svg ref={svgRef} viewBox={viewBox} width="100%"
@@ -290,13 +314,6 @@ function JourneyViz({ scans }) {
         </text>
         {pathEls}
         {bubbles}
-        {totalMins !== null && (
-          <text x={W / 2} y={totalH - 100} textAnchor="middle"
-            fontSize="12" fill="#1c1a15" opacity="0.22"
-            fontFamily="var(--font-mono)" letterSpacing="0.1em">
-            {totalMins} min total · {safeScans.length} works
-          </text>
-        )}
       </svg>
 
       {selectedArtwork && (
@@ -469,11 +486,11 @@ function ReadyContent() {
           <JourneyViz scans={scans} />
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 px-8 pb-10 pt-12 pointer-events-none"
+        <div className="fixed bottom-10 left-0 right-0 px-8 pb-10 pt-12 pointer-events-none"
           style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}>
           <button
             onClick={() => { localStorage.removeItem('session_id'); router.push('/') }}
-            className="w-fit flex items-center gap-3 group pointer-events-auto"
+            className="w-fit flex items-center gap-30 group pointer-events-auto"
           >
             <span className="t-label">Start over</span>
             <span className="t-label group-hover:translate-x-1 transition-transform duration-300">→</span>
