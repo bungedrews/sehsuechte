@@ -289,6 +289,44 @@ function JourneyViz({ scans }) {
 
   return (
     <>
+    {/* Legend */}
+<div style={{
+  display: 'inline-flex', alignItems: 'center', gap: 20,
+  border: '0.5px solid rgba(28,26,21,0.18)',
+  padding: '8px 16px',
+  marginBottom: 20,
+  alignSelf: 'center',
+}}>
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <svg width="22" height="22" viewBox="0 0 22 22">
+      <defs>
+        <filter id="leg-wc1" x="-60%" y="-60%" width="220%" height="220%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="7"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <filter id="leg-wc2" x="-40%" y="-40%" width="180%" height="180%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" seed="3"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </defs>
+      <circle cx="11" cy="11" r="9" fill="#c8b4e0" opacity="0.07" filter="url(#leg-wc1)" />
+      <circle cx="11" cy="11" r="7" fill="#c8b4e0" opacity="0.10" filter="url(#leg-wc1)" />
+      <circle cx="11" cy="11" r="5.5" fill="#c8b4e0" opacity="0.18" filter="url(#leg-wc2)" />
+      <circle cx="11" cy="11" r="4" fill="#9b7ec8" opacity="0.35" />
+      <circle cx="11" cy="11" r="2.2" fill="#6a4c8c" opacity="0.55" />
+      <circle cx="10.4" cy="10.4" r="0.9" fill="white" opacity="0.75" />
+    </svg>
+    <span className="t-label" style={{ fontSize: 11 }}>Artwork</span>
+  </div>
+
+  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div style={{
+      width: 7, height: 7, borderRadius: '50%',
+      background: '#1c1a15', opacity: 0.45, flexShrink: 0,
+    }} />
+    <span className="t-label" style={{ fontSize: 11 }}>5 min passed</span>
+  </div>
+</div>
       <svg ref={svgRef} viewBox={viewBox} width="100%"
         xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', overflow: 'visible' }}>
         <defs dangerouslySetInnerHTML={{ __html: filterDefs + clipDefs.join('') }} />
