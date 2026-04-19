@@ -631,11 +631,11 @@ function ReadyContent() {
       )}
 
       <div
-  className="fixed bottom-6 left-10 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
+  className="fixed bottom-6 left-10 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
   style={{
     background: 'var(--color-bg)',
-    maskImage: 'linear-gradient(to bottom, transparent, black 35%, black 65%, transparent 100%)',
-WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 35%, black 65%, transparent 100%)',
+    maskImage: 'linear-gradient(to bottom, transparent, black 45%, black 75%, transparent 100%)',
+    WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 45%, black 75%, transparent 100%)',
   }}
       >
         <p className="t-body"> → Go to the EXIT poster to finish your journey at the exhibition</p>
