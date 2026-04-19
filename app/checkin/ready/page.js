@@ -308,6 +308,7 @@ function JourneyViz({ scans }) {
   border: '0.5px solid rgba(28,26,21,0.18)',
   padding: '8px 16px',
   marginBottom: 20,
+   marginTop: 16,
   alignSelf: 'center',
 }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -630,8 +631,12 @@ function ReadyContent() {
       )}
 
       <div
-        className="fixed bottom-6 left-10 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg) 55%)' }}
+  className="fixed bottom-6 left-10 right-0 flex justify-between items-end px-8 pb-10 pt-20 pointer-events-none"
+  style={{
+    background: 'var(--color-bg)',
+    maskImage: 'linear-gradient(to bottom, transparent, black 35%, black 65%, transparent 100%)',
+WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 35%, black 65%, transparent 100%)',
+  }}
       >
         <p className="t-body"> → Go to the EXIT poster to finish your journey at the exhibition</p>
         <div className="w-1.5 h-2.5 rounded-full bg-neutral-300 animate-pulse" />

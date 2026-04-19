@@ -295,6 +295,7 @@ function JourneyViz({ scans }) {
   border: '0.5px solid rgba(28,26,21,0.18)',
   padding: '8px 16px',
   marginBottom: 20,
+   marginTop: 16,
   alignSelf: 'center',
 }}>
   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
